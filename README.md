@@ -7,12 +7,12 @@ Performs cleaning operations for Azure Subscription. This is used to removed unu
 This project requires [dotnet core](https://www.microsoft.com/net/download),
 see image used in Jenkinsfile for specific requirements.
 ```
-dotnet build
+dotnet build .\src\
 ```
 
 ## Testing
 ```
-dotnet test
+dotnet test .\src\
 ```
 
 ## License

@@ -1,6 +1,8 @@
 # Azure Subscription Cleaner
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
+This is still WIP
+
 Performs cleaning operations for Azure Subscription. This is used to removed unused items from development subscription.
 
 ## Build

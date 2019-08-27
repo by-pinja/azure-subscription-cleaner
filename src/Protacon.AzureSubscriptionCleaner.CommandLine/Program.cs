@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
-using Microsoft.Azure.Management.Fluent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -33,7 +30,7 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
                             return Task.FromResult(0);
                         }
 
-                        logger.LogWarning("Something went wrong while parsing command(s)");
+                        logger.LogWarning("Something went wrong while parsing command(s): Errors: {errors}", string.Join(", ", errors));
                         return Task.FromResult(0);
                     }).Wait();
         }

@@ -18,6 +18,13 @@ dotnet build .\src\
 dotnet test .\src\
 ```
 
+## Command line usage
+
+For help:
+```
+dotnet 
+```
+
 ## License
 
 [The MIT License (MIT)](LICENSE)

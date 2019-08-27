@@ -7,6 +7,12 @@ This is still WIP
 Performs cleaning operations for Azure Subscription. This is used to removed unused items from development subscription.
 
 ## Build
+
+These commands are assumed to be executed from the same directory this file exists.
+These commands can also be executed from project directories, but
+the directory/project needs to be removed from the command. See `dotnet`
+documentation from more information.
+
 This project requires [dotnet core](https://www.microsoft.com/net/download),
 see image used in Jenkinsfile for specific requirements.
 ```
@@ -18,11 +24,46 @@ dotnet build .\src\
 dotnet test .\src\
 ```
 
-## Command line usage
+## Command line tool
+This section handles usage of CommandeLine-usage. This is mostly used for
+testing and developing this tool.
 
-For help:
+This project uses [CommandLineParser](https://github.com/commandlineparser/commandline)
+to parse command line options.
+
+### Configurations
+
+CommandLine-project reads configuration values from `appsettings.json` and
+then overriden from `appsettings.Development.json` if it exists.
+
+`ServicePrincipalConfiguration` is used to connect to Azure. These can be
+read and created from Azure AD using Azure Portal (or powershell etc.)
+
+Example of appsettings.Development.json
 ```
-dotnet 
+{
+    "ServicePrincipalConfiguration": {
+        "ClientId": "e15bf1a8-c8b5-11e9-a32f-2a2ae2dbcce4",
+        "ClientSecret": "this-was-very-secret",
+        "TenantId": "e15c04c2-c8b5-11e9-a32f-2a2ae2dbcce4"
+    }
+}
+```
+
+### Usage
+For up-tp-date help:
+```
+dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine -- --help
+```
+
+For simulated run:
+```
+dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine -- -s
+```
+
+For actual run (this actually deletes stuff!):
+```
+dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine --
 ```
 
 ## License

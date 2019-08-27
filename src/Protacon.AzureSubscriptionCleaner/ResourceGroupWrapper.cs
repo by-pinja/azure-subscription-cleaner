@@ -24,7 +24,14 @@ namespace Protacon.AzureSubscriptionCleaner
             _logger.LogDebug("Found {count} resource groups to delete.", resourceGroups.Count());
             foreach (var resourceGroup in resourceGroups)
             {
-                _logger.LogInformation("Deleting {resourceGroupName}", resourceGroup.Name);
+                _logger.LogDebug("Checking if resource group {resourceGroup} has locks...", resourceGroup.Name);
+                var locks = await _azureConnection.ManagementLocks.ListByResourceGroupAsync(resourceGroup.Name, true);
+                if (locks.Any())
+                {
+                    _logger.LogInformation("Resource group {resourceGroup} had at least one lock, skipping deletion.", resourceGroup.Name);
+                    continue;
+                }
+                _logger.LogInformation("Deleting {resourceGroup}", resourceGroup.Name);
                 if (!simulate)
                 {
                     await _azureConnection.ResourceGroups.DeleteByNameAsync(resourceGroup.Name);

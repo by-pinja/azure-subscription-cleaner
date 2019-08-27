@@ -5,6 +5,7 @@
 This is still WIP
 
 Performs cleaning operations for Azure Subscription. This is used to removed unused items from development subscription.
+To opt out from this, lock your resouce group.
 
 ## Build
 

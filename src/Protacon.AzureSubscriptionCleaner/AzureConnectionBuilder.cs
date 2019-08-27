@@ -19,5 +19,17 @@ namespace Protacon.AzureSubscriptionCleaner
                     .Authenticate(credentials)
                     .WithDefaultSubscription();
         }
+
+        public static IAzure BuildServicePrincipalConnection(ServicePrincipalConfiguration servicePrincipal)
+        {
+            var credentials = SdkContext
+                .AzureCredentialsFactory
+                .FromServicePrincipal(servicePrincipal.ClientId, servicePrincipal.ClientSecret, servicePrincipal.TenantId, AzureEnvironment.AzureGlobalCloud);
+            return Azure
+                .Configure()
+                .WithLogLevel(HttpLoggingDelegatingHandler.Level.Basic)
+                .Authenticate(credentials)
+                .WithDefaultSubscription();
+        }
     }
 }

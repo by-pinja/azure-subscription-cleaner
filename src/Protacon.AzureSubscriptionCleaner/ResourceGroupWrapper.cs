@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.Fluent;
 using Microsoft.Extensions.Logging;
@@ -16,15 +17,20 @@ namespace Protacon.AzureSubscriptionCleaner
             _azureConnection = azureConnection ?? throw new ArgumentNullException(nameof(azureConnection));
         }
 
-        public async Task ListGroups()
+        public async Task DeleteNonLockedResourceGroups(bool simulate)
         {
-            _logger.LogTrace("Finding resource groups...");
+            _logger.LogTrace("Finding resource groups to delete...");
             var resourceGroups = await _azureConnection.ResourceGroups.ListAsync(true);
+            _logger.LogDebug("Found {count} resource groups to delete.", resourceGroups.Count());
             foreach (var resourceGroup in resourceGroups)
             {
-                _logger.LogDebug("Found resource group {resourceGroupName}", resourceGroup.Name);
-                //await _azureConnection.ResourceGroups.DeleteByNameAsync(resourceGroup.Name);
+                _logger.LogInformation("Deleting {resourceGroupName}", resourceGroup.Name);
+                if (!simulate)
+                {
+                    await _azureConnection.ResourceGroups.DeleteByNameAsync(resourceGroup.Name);
+                }
             }
+            _logger.LogTrace("Resource groups deleted");
         }
     }
 }

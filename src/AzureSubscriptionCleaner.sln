@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.AzureSubscriptionC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.AzureSubscriptionCleaner", "Protacon.AzureSubscriptionCleaner\Protacon.AzureSubscriptionCleaner.csproj", "{CF4A7174-86AC-416E-A927-30A9CB2139BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.AzureSubscriptionCleaner.CommandLine", "Protacon.AzureSubscriptionCleaner.CommandLine\Protacon.AzureSubscriptionCleaner.CommandLine.csproj", "{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{CF4A7174-86AC-416E-A927-30A9CB2139BC}.Release|x64.Build.0 = Release|Any CPU
 		{CF4A7174-86AC-416E-A927-30A9CB2139BC}.Release|x86.ActiveCfg = Release|Any CPU
 		{CF4A7174-86AC-416E-A927-30A9CB2139BC}.Release|x86.Build.0 = Release|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Debug|x64.Build.0 = Debug|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Debug|x86.Build.0 = Debug|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|x64.ActiveCfg = Release|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|x64.Build.0 = Release|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|x86.ActiveCfg = Release|Any CPU
+		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

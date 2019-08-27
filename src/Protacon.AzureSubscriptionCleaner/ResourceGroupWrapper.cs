@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.Fluent;
+using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging;
 
 namespace Protacon.AzureSubscriptionCleaner
@@ -24,13 +25,30 @@ namespace Protacon.AzureSubscriptionCleaner
             _logger.LogDebug("Found {count} resource groups to delete.", resourceGroups.Count());
             foreach (var resourceGroup in resourceGroups)
             {
-                _logger.LogInformation("Deleting {resourceGroupName}", resourceGroup.Name);
-                if (!simulate)
-                {
-                    await _azureConnection.ResourceGroups.DeleteByNameAsync(resourceGroup.Name);
-                }
+                await DeleteNonLockedResourceGroup(resourceGroup, simulate);
             }
             _logger.LogTrace("Resource groups deleted");
+        }
+
+        private async Task DeleteNonLockedResourceGroup(IResourceGroup resourceGroup, bool simulate)
+        {
+            _logger.LogDebug("Checking if resource group {resourceGroup} has locks...", resourceGroup.Name);
+            var locks = await _azureConnection.ManagementLocks.ListByResourceGroupAsync(resourceGroup.Name, true);
+
+            if (locks.Any())
+            {
+                foreach (var managementLock in locks)
+                {
+                    _logger.LogDebug("Lock found in resource group {resourceGroup}, id: {id}, level: {level} notes: {notes}", resourceGroup.Name, managementLock.Id, managementLock.Level, managementLock.Notes);
+                }
+                _logger.LogInformation("Resource group {resourceGroup} had at least one lock, skipping deletion.", resourceGroup.Name);
+                return;
+            }
+            _logger.LogInformation("Deleting resource group {resourceGroup}", resourceGroup.Name);
+            if (!simulate)
+            {
+                await _azureConnection.ResourceGroups.DeleteByNameAsync(resourceGroup.Name);
+            }
         }
     }
 }

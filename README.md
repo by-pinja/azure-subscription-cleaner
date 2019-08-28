@@ -52,7 +52,7 @@ Example of appsettings.Development.json
 ```
 
 ### Usage
-For up-tp-date help:
+For up-to-date usage help:
 ```
 dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine -- --help
 ```

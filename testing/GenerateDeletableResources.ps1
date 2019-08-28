@@ -1,6 +1,6 @@
 ##############################################################################
 #.SYNOPSIS
-# Generates resources and resources groups for testing purposes
+# Generates resources groups for testing purposes
 #
 #.PARAMETER ResourceGroupCount
 # Number of resource groups that are generated

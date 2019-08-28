@@ -14,7 +14,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
         }
 
         [FunctionName("SubscriptionCleaner")]
-        public void Run([TimerTrigger("0 * * * * *")]TimerInfo timer)
+        public void Run([TimerTrigger("0 0 0 * * *")]TimerInfo timer)
         {
             if (timer == null)
             {

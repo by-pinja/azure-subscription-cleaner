@@ -85,6 +85,13 @@ New-AzResourceGroupDeployment `
     -environment "Development"
 ```
 
+### Deploying from local machine
+
+Execute `Publish.ps1` from current folder. See the script for documenation.
+```
+ .\deployment\Publish.ps1 -ResourceGroup my-resource-group
+```
+
 ## License
 
 [The MIT License (MIT)](LICENSE)

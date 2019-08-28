@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,8 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
         {
             using var dependencyInjection = BuildDependencyInjection();
             var logger = dependencyInjection.GetService<ILogger<Program>>();
+            var start = DateTime.UtcNow;
+            logger.LogDebug("Starting time: {time}", start);
             Parser
                 .Default
                 .ParseArguments<Options>(args)
@@ -33,10 +36,12 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
                         logger.LogWarning("Something went wrong while parsing command(s): Errors: {errors}", string.Join(", ", errors));
                         return Task.FromResult(0);
                     }).Wait();
+            logger.LogDebug("Run duration: {duration}", DateTime.UtcNow - start);
         }
 
         private static async Task ProcessOptions(Options options, ServiceProvider serviceProvider)
         {
+
             var resourceGroupWrapper = serviceProvider.GetService<ResourceGroupWrapper>();
             await resourceGroupWrapper.DeleteNonLockedResourceGroups(options.Simulate);
         }

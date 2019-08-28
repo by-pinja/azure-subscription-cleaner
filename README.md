@@ -67,6 +67,24 @@ For actual run (this actually deletes stuff!):
 dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine --
 ```
 
+## Deployment
+
+Project `Protacon.AzureSubscriptionCleaner.AzureFunctions` can be deployed to Azure as Azure Function.
+
+### Creating environment
+
+`deployment\azuredeploy.json` contains definition of environment. It can be deployed in multiple ways, but here are few examples.
+Read `deployment\azuredeploy.json` for additional parameters and documentation.
+
+Azure PowerShell module
+```
+New-AzResourceGroupDeployment `
+    -Name deployment-name `
+    -TemplateFile Deployment/azuredeploy.json `
+    -ResourceGroupName my-resource-group `
+    -environment "Development"
+```
+
 ## License
 
 [The MIT License (MIT)](LICENSE)

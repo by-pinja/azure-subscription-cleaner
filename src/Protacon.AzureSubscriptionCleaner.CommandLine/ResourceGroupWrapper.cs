@@ -5,7 +5,7 @@ using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging;
 
-namespace Protacon.AzureSubscriptionCleaner
+namespace Protacon.AzureSubscriptionCleaner.CommandLine
 {
     public class ResourceGroupWrapper
     {

@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
+using Microsoft.Azure.Management.Fluent;
+using Microsoft.Azure.Management.ResourceManager.Fluent;
+using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -68,10 +71,22 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
                         servicePrincipalConfigSection["ClientSecret"]
                     );
 
-                    return AzureConnectionBuilder.BuildServicePrincipalConnection(servicePrincipalConfiguration);
+                    return BuildServicePrincipalConnection(servicePrincipalConfiguration);
                 })
                 .AddTransient<ResourceGroupWrapper>()
                 .BuildServiceProvider();
+        }
+
+        private static IAzure BuildServicePrincipalConnection(ServicePrincipalConfiguration servicePrincipal)
+        {
+            var credentials = SdkContext
+                .AzureCredentialsFactory
+                .FromServicePrincipal(servicePrincipal.ClientId, servicePrincipal.ClientSecret, servicePrincipal.TenantId, AzureEnvironment.AzureGlobalCloud);
+            return Azure
+                .Configure()
+                .WithLogLevel(HttpLoggingDelegatingHandler.Level.Basic)
+                .Authenticate(credentials)
+                .WithDefaultSubscription();
         }
     }
 }

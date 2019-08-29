@@ -1,4 +1,4 @@
-namespace Protacon.AzureSubscriptionCleaner
+namespace Protacon.AzureSubscriptionCleaner.CommandLine
 {
     public class ServicePrincipalConfiguration
     {

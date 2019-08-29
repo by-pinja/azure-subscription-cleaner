@@ -85,6 +85,9 @@ New-AzResourceGroupDeployment `
     -environment "Development"
 ```
 
+The function app also needs to be able to delete other resource groups. This can be done by giving
+the function app `Contributor` access to the subscription.
+
 ### Deploying from local machine
 
 Execute `Publish.ps1` from current folder. See the script for documenation.

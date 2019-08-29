@@ -27,13 +27,6 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
         }
 
         [Test]
-        public void StartMonitoring_ThrowsArgumentNullExceptionWithNullTimer()
-        {
-            var exception = Assert.ThrowsAsync<System.ArgumentNullException>(() => _cleaner.StartMonitoring(null));
-            Assert.AreEqual("context", exception.ParamName);
-        }
-
-        [Test]
         public async Task StartMonitoring_CallsStuff()
         {
             var mockContext = Substitute.For<IDurableOrchestrationContext>();

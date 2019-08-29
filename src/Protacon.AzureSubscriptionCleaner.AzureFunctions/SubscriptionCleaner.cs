@@ -36,11 +36,6 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
         [FunctionName(nameof(StartMonitoring))]
         public async Task StartMonitoring([OrchestrationTrigger] IDurableOrchestrationContext context)
         {
-            if (context is null)
-            {
-                throw new System.ArgumentNullException(nameof(context));
-            }
-
             if (!context.IsReplaying)
             {
                 _logger.LogDebug("Getting resource groups");

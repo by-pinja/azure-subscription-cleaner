@@ -45,7 +45,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
             {
                 _logger.LogDebug("Getting resource groups");
             }
-            var resourceGroupNames = await context.CallActivityAsync<IEnumerable<string>>(nameof(GetResourceGroups), null);
+            var resourceGroupNames = await context.CallActivityAsync<IEnumerable<string>>(nameof(GetResourceGroupsNames), null);
 
             foreach (var name in resourceGroupNames)
             {
@@ -57,8 +57,8 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
             }
         }
 
-        [FunctionName(nameof(GetResourceGroups))]
-        public async Task<IEnumerable<string>> GetResourceGroups([ActivityTrigger] IDurableActivityContext context)
+        [FunctionName(nameof(GetResourceGroupsNames))]
+        public async Task<IEnumerable<string>> GetResourceGroupsNames([ActivityTrigger] IDurableActivityContext context)
         {
             _logger.LogTrace("Instance {instanceId}: Finding resource groups to delete...", context.InstanceId);
             var resourceGroups = await _azureConnection.ResourceGroups.ListAsync(true);

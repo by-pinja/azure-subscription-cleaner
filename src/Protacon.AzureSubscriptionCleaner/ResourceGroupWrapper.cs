@@ -18,6 +18,8 @@ namespace Protacon.AzureSubscriptionCleaner
             _azureConnection = azureConnection ?? throw new ArgumentNullException(nameof(azureConnection));
         }
 
+
+
         public async Task DeleteNonLockedResourceGroups(bool simulate)
         {
             _logger.LogTrace("Finding resource groups to delete...");

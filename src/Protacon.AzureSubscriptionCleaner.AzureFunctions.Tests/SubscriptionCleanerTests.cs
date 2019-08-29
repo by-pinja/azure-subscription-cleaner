@@ -1,3 +1,4 @@
+using Microsoft.Azure.Management.Fluent;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -12,14 +13,15 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
         public void Setup()
         {
             var mockLogger = Substitute.For<ILogger<SubscriptionCleaner>>();
-            _cleaner = new SubscriptionCleaner(mockLogger);
+            var azure = Substitute.For<IAzure>();
+            _cleaner = new SubscriptionCleaner(mockLogger, azure);
         }
 
         [Test]
-        public void Run_ThrowsArgumentNullExceptionWithNullTimer()
+        public void StartMonitoring_ThrowsArgumentNullExceptionWithNullTimer()
         {
-            var exception = Assert.Throws<System.ArgumentNullException>(() => _cleaner.Run(null));
-            Assert.AreEqual("timer", exception.ParamName);
+            var exception = Assert.ThrowsAsync<System.ArgumentNullException>(() => _cleaner.StartMonitoring(null));
+            Assert.AreEqual("context", exception.ParamName);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,6 +8,7 @@ using Microsoft.Azure.Management.Locks.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Timers;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -27,7 +29,17 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
         }
 
         [Test]
-        public async Task StartMonitoring_CallsStuff()
+        public async Task TimerStart_CallsDoMonitoring()
+        {
+            var timer = new TimerInfo(new MockTimerSchedule(), new ScheduleStatus());
+            var starter = Substitute.For<IDurableOrchestrationClient>();
+            await _cleaner.TimerStart(timer, starter);
+
+            await starter.Received().StartNewAsync(nameof(SubscriptionCleaner.OchestrateSubscriptionCleanUp), null);
+        }
+
+        [Test]
+        public async Task DoMonitoring_CallsStuff()
         {
             var mockContext = Substitute.For<IDurableOrchestrationContext>();
 
@@ -37,12 +49,12 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
                 "group2"
             };
 
-            mockContext.CallActivityAsync<IEnumerable<string>>("GetResourceGroupsNames", null).Returns(Task.FromResult((IEnumerable<string>)groups));
+            mockContext.CallActivityAsync<IEnumerable<string>>(nameof(SubscriptionCleaner.GetResourceGroupsNames), null).Returns(Task.FromResult((IEnumerable<string>)groups));
 
-            await _cleaner.StartMonitoring(mockContext);
+            await _cleaner.OchestrateSubscriptionCleanUp(mockContext);
 
-            await mockContext.Received().CallActivityAsync("DeleteIfNotLocked", groups[0]);
-            await mockContext.Received().CallActivityAsync("DeleteIfNotLocked", groups[1]);
+            await mockContext.Received().CallActivityAsync(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[0]);
+            await mockContext.Received().CallActivityAsync(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[1]);
         }
 
         [Test]
@@ -95,6 +107,14 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
             await _cleaner.DeleteIfNotLocked(expectedGroup);
 
             await _mockAzure.ResourceGroups.Received().DeleteByNameAsync(expectedGroup);
+        }
+
+        private class MockTimerSchedule : TimerSchedule
+        {
+            public override DateTime GetNextOccurrence(DateTime now)
+            {
+                return DateTime.UtcNow;
+            }
         }
 
         private class PagedCollection<T> : List<T>, IPagedCollection<T>

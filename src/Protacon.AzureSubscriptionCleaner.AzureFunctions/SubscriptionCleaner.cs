@@ -20,21 +20,16 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
             _azureConnection = azureConnection;
         }
 
-        [FunctionName(nameof(HttpStart))]
-        public async Task<HttpResponseMessage> HttpStart(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")]HttpRequestMessage req,
-            [OrchestrationClient]IDurableOrchestrationClient starter)
+        [FunctionName(nameof(TimerStart))]
+        public async Task TimerStart([TimerTrigger("0 2 1 * * *")] TimerInfo timer, [OrchestrationClient] IDurableOrchestrationClient starter)
         {
-            // Function input comes from the request content.
-            string instanceId = await starter.StartNewAsync(nameof(StartMonitoring), null);
-
+            _logger.LogTrace("{class}, Next: {next}, Last: {last}", nameof(TimerStart), timer.ScheduleStatus.Next, timer.ScheduleStatus.Last);
+            string instanceId = await starter.StartNewAsync(nameof(OchestrateSubscriptionCleanUp), null);
             _logger.LogInformation($"Started orchestration with ID = '{instanceId}'.");
-
-            return starter.CreateCheckStatusResponse(req, instanceId);
         }
 
-        [FunctionName(nameof(StartMonitoring))]
-        public async Task StartMonitoring([OrchestrationTrigger] IDurableOrchestrationContext context)
+        [FunctionName(nameof(OchestrateSubscriptionCleanUp))]
+        public async Task OchestrateSubscriptionCleanUp([OrchestrationTrigger] IDurableOrchestrationContext context)
         {
             if (!context.IsReplaying)
             {

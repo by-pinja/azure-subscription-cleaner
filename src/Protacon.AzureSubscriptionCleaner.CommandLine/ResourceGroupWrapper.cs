@@ -21,11 +21,11 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
         public async Task DeleteNonLockedResourceGroups(bool simulate)
         {
             _logger.LogTrace("Finding resource groups to delete...");
-            var resourceGroups = await _azureConnection.ResourceGroups.ListAsync(true);
+            var resourceGroups = await _azureConnection.ResourceGroups.ListAsync(true).ConfigureAwait(false);
             _logger.LogDebug("Found {count} resource groups to delete.", resourceGroups.Count());
             foreach (var resourceGroup in resourceGroups)
             {
-                await DeleteNonLockedResourceGroup(resourceGroup, simulate);
+                await DeleteNonLockedResourceGroup(resourceGroup, simulate).ConfigureAwait(false);
             }
             _logger.LogTrace("Resource groups deleted");
         }
@@ -33,7 +33,7 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
         private async Task DeleteNonLockedResourceGroup(IResourceGroup resourceGroup, bool simulate)
         {
             _logger.LogDebug("Checking if resource group {resourceGroup} has locks...", resourceGroup.Name);
-            var locks = await _azureConnection.ManagementLocks.ListByResourceGroupAsync(resourceGroup.Name, true);
+            var locks = await _azureConnection.ManagementLocks.ListByResourceGroupAsync(resourceGroup.Name, true).ConfigureAwait(false);
 
             if (locks.Any())
             {
@@ -47,7 +47,7 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
             _logger.LogInformation("Deleting resource group {resourceGroup}", resourceGroup.Name);
             if (!simulate)
             {
-                await _azureConnection.ResourceGroups.DeleteByNameAsync(resourceGroup.Name);
+                await _azureConnection.ResourceGroups.DeleteByNameAsync(resourceGroup.Name).ConfigureAwait(false);
             }
         }
     }

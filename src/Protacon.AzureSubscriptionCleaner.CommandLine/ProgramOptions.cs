@@ -2,12 +2,12 @@ using CommandLine;
 
 namespace Protacon.AzureSubscriptionCleaner.CommandLine
 {
-    public class Options
+    public class ProgramOptions
     {
         [Option('s', "simulate", HelpText = "If enabled, no actual changing operations are done.")]
         public bool Simulate { get; }
 
-        public Options(bool simulate)
+        public ProgramOptions(bool simulate)
         {
             Simulate = simulate;
         }

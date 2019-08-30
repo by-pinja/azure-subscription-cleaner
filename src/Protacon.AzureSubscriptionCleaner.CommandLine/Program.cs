@@ -11,7 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Protacon.AzureSubscriptionCleaner.CommandLine
 {
+#pragma warning disable CA1052
     public class Program
+#pragma warning restore CA1052
     {
         public static void Main(string[] args)
         {
@@ -21,9 +23,9 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
             logger.LogDebug("Starting time: {time}", start);
             Parser
                 .Default
-                .ParseArguments<Options>(args)
+                .ParseArguments<ProgramOptions>(args)
                 .MapResult(
-                    async (Options option) => { await ProcessOptions(option, dependencyInjection); },
+                    async (ProgramOptions option) => { await ProcessOptions(option, dependencyInjection).ConfigureAwait(false); },
                     errors =>
                     {
                         if (errors.Count() == 1 &&
@@ -42,11 +44,11 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
             logger.LogDebug("Run duration: {duration}", DateTime.UtcNow - start);
         }
 
-        private static async Task ProcessOptions(Options options, ServiceProvider serviceProvider)
+        private static async Task ProcessOptions(ProgramOptions options, ServiceProvider serviceProvider)
         {
 
             var resourceGroupWrapper = serviceProvider.GetService<ResourceGroupWrapper>();
-            await resourceGroupWrapper.DeleteNonLockedResourceGroups(options.Simulate);
+            await resourceGroupWrapper.DeleteNonLockedResourceGroups(options.Simulate).ConfigureAwait(false);
         }
 
         private static ServiceProvider BuildDependencyInjection()

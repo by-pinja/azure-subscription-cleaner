@@ -14,6 +14,11 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
     {
         public void Configure(IWebJobsBuilder builder)
         {
+            if (builder is null)
+            {
+                throw new System.ArgumentNullException(nameof(builder));
+            }
+
             builder
                 .Services
                 .AddTransient((provider) =>

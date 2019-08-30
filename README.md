@@ -52,7 +52,7 @@ Example of appsettings.Development.json
 ```
 
 ### Usage
-For up-tp-date help:
+For up-to-date usage help:
 ```
 dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine -- --help
 ```
@@ -84,6 +84,9 @@ New-AzResourceGroupDeployment `
     -ResourceGroupName my-resource-group `
     -environment "Development"
 ```
+
+The function app also needs to be able to delete other resource groups. This can be done by giving
+the function app `Contributor` access to the subscription.
 
 ### Deploying from local machine
 

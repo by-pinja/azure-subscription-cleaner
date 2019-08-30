@@ -5,8 +5,14 @@
             "default": "Information",
             "Host.Results": "Information",
             "Function": "Information",
-            "Host.Aggregator": "Information"
+            "Host.Aggregator": "Information",
+            "Protacon": "Trace"
         },
         "applicationInsights": {}
+    },
+    "extensions": {
+        "durableTask": {
+            "hubName": "DurableFunctionsHub"
+        }
     }
 }

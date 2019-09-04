@@ -19,7 +19,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
         }
 
         [FunctionName(nameof(TimerStart))]
-        public async Task TimerStart([TimerTrigger("0 2 1 * * *")] TimerInfo timer, [OrchestrationClient] IDurableOrchestrationClient starter)
+        public async Task TimerStart([TimerTrigger("0 2 1 * * *")] TimerInfo timer, [DurableClient] IDurableOrchestrationClient starter)
         {
             if (timer is null)
             {

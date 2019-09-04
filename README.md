@@ -1,6 +1,7 @@
 # Azure Subscription Cleaner
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Build Status](https://jenkins.protacon.cloud/buildStatus/icon?job=www.github.com/azure-subscription-cleaner/master)](https://jenkins.protacon.cloud/blue/organizations/jenkins/www.github.com%2Fazure-subscription-cleaner/activity)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=protacon/azure-subscription-cleaner&identifier=204444972)](https://dependabot.com)
 
 This is still WIP
 

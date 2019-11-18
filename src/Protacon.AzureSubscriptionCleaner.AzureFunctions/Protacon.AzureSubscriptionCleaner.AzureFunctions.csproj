@@ -12,7 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.29" />
-    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.27.2" />
+    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.28.0" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

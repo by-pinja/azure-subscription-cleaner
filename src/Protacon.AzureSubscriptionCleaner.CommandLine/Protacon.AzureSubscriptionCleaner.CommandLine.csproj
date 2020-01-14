@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <CodeAnalysisRuleSet>.\Protacon.AzureSubscriptionCleaner.CommandLine.ruleset</CodeAnalysisRuleSet>

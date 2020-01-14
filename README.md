@@ -72,29 +72,13 @@ dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine --
 
 Project `Protacon.AzureSubscriptionCleaner.AzureFunctions` can be deployed to Azure as Azure Function.
 
-### Creating environment
-
-`deployment\azuredeploy.json` contains definition of environment. It can be deployed in multiple ways, but here are few examples.
-Read `deployment\azuredeploy.json` for additional parameters and documentation.
-
-Azure PowerShell module
-```
-New-AzResourceGroupDeployment `
-    -Name deployment-name `
-    -TemplateFile Deployment/azuredeploy.json `
-    -ResourceGroupName my-resource-group `
-    -environment "Development"
-```
+Create copy from `developer-settings.example.json` as `developer-settings.json`
+with your own values and execute `deployment\Prepare-Environment.ps1`
 
 The function app also needs to be able to delete other resource groups. This can be done by giving
 the function app `Contributor` access to the subscription.
 
-### Deploying from local machine
-
-Execute `Publish.ps1` from current folder. See the script for documenation.
-```
- .\deployment\Publish.ps1 -ResourceGroup my-resource-group
-```
+For details, see `deployment\Prepare-Environment.ps1`
 
 ## License
 

@@ -8,6 +8,7 @@ podTemplate(label: pod.label,
     containerTemplate(name: 'powershell', image: 'azuresdk/azure-powershell-core:master', ttyEnabled: true, command: '/bin/sh -c', args: 'cat')
   ]
 ) {
+    def branch = (env.BRANCH_NAME)
     def sourceFolder = 'src'
     def publishFolder = 'publish'
 

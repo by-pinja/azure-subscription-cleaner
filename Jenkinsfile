@@ -31,12 +31,11 @@ podTemplate(label: pod.label,
 
         if (isTest(branch)){
             def zipName = 'publish.zip'
-            def functionsProject = 'ValidationLibrary.AzureFunctions'
 
             container('powershell'){
                 stage('Package') {
                     sh """
-                        pwsh -command "Compress-Archive -DestinationPath $zipName -Path $functionsProject/$publishFolder/* -Force"
+                        pwsh -command "Compress-Archive -DestinationPath $zipName -Path $publishFolder/*"
                     """
                 }
             }

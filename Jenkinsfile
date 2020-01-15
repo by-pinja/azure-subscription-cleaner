@@ -1,10 +1,15 @@
 library 'jenkins-ptcs-library@2.3.0'
 
+def isTest(branchName) { return branchName == "test" }
+
 podTemplate(label: pod.label,
   containers: pod.templates + [
     containerTemplate(name: 'dotnet', image: 'ptcos/multi-netcore-sdk:0.0.2', ttyEnabled: true, command: '/bin/sh -c', args: 'cat'),
+    containerTemplate(name: 'powershell', image: 'azuresdk/azure-powershell-core:master', ttyEnabled: true, command: '/bin/sh -c', args: 'cat')
   ]
 ) {
+    def sourceFolder = 'src'
+
     node(pod.label) {
         stage('Checkout') {
             checkout scm
@@ -12,13 +17,27 @@ podTemplate(label: pod.label,
         container('dotnet') {
             stage('Build') {
                 sh """
-                    dotnet build src
+                    dotnet publish $sourceFolder -c Release -o $publishFolder --version-suffix ${env.BUILD_NUMBER}
                 """
             }
             stage('Test') {
                 sh """
-                    dotnet test src
+                    dotnet test $sourceFolder
                 """
+            }
+        }
+
+        if (isTest(branch)){
+            def zipName = 'publish.zip'
+            def functionsProject = 'ValidationLibrary.AzureFunctions'
+            def publishFolder = 'publish'
+
+            container('powershell'){
+                stage('Package') {
+                    sh """
+                        pwsh -command "Compress-Archive -DestinationPath $zipName -Path $functionsProject/$publishFolder/* -Force"
+                    """
+                }
             }
         }
     }

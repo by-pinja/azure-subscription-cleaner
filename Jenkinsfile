@@ -53,7 +53,7 @@ podTemplate(label: pod.label,
                     }
                     stage('Create test environment'){
                         sh """
-                            pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-ci -TemplateFile Deployment/azuredeploy.json -ResourceGroupName $ciRg -appName $ciAppName -environment $environment"
+                            pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-ci -TemplateFile deployment/azuredeploy.json -ResourceGroupName $ciRg -appName $ciAppName -environment $environment"
                         """
                     }
                     try {

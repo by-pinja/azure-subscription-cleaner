@@ -10,6 +10,12 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
 {
     public class SubscriptionCleaner
     {
+        /// <summary>
+        ///  We want to avoid executing this during workdays so we'll
+        /// execute during weekend
+        /// {second} {minute} {hour} {day} {month} {day of the week}
+        /// </summary>
+        private const string FirstSaturdayOfMonth = "0 0 0 1-7 * SAT";
         private readonly ILogger<SubscriptionCleaner> _logger;
         private readonly IAzure _azureConnection;
 
@@ -20,7 +26,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
         }
 
         [FunctionName(nameof(TimerStart))]
-        public async Task TimerStart([TimerTrigger("0 2 1 * * *")] TimerInfo timer, [DurableClient] IDurableOrchestrationClient starter)
+        public async Task TimerStart([TimerTrigger(FirstSaturdayOfMonth)] TimerInfo timer, [DurableClient] IDurableOrchestrationClient starter)
         {
             if (timer is null)
             {
@@ -33,7 +39,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
             }
 
             _logger.LogTrace("{class}, Next: {next}, Last: {last}", nameof(TimerStart), timer.ScheduleStatus.Next, timer.ScheduleStatus.Last);
-            string instanceId = await starter.StartNewAsync(nameof(OchestrateSubscriptionCleanUp), null).ConfigureAwait(false);
+            string instanceId = await starter.StartNewAsync(nameof(OchestrateSubscriptionCleanUp), null).ConfigureAwait(true);
             _logger.LogInformation($"Started orchestration with ID = '{instanceId}'.");
         }
 
@@ -49,7 +55,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
             {
                 _logger.LogDebug("Getting resource groups");
             }
-            var resourceGroupNames = await context.CallActivityAsync<IEnumerable<string>>(nameof(GetResourceGroupsNames), null).ConfigureAwait(false);
+            var resourceGroupNames = await context.CallActivityAsync<IEnumerable<string>>(nameof(GetResourceGroupsNames), string.Empty).ConfigureAwait(true);
 
             foreach (var name in resourceGroupNames)
             {
@@ -57,7 +63,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
                 {
                     _logger.LogDebug("Calling delete function on {resourceGroupName}", name);
                 }
-                await context.CallActivityAsync(nameof(DeleteIfNotLocked), name).ConfigureAwait(false);
+                await context.CallActivityAsync(nameof(DeleteIfNotLocked), name).ConfigureAwait(true);
             }
         }
 
@@ -70,7 +76,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
             }
 
             _logger.LogTrace("Instance {instanceId}: Finding resource groups to delete...", context.InstanceId);
-            var resourceGroups = await _azureConnection.ResourceGroups.ListAsync(true).ConfigureAwait(false);
+            var resourceGroups = await _azureConnection.ResourceGroups.ListAsync(true).ConfigureAwait(true);
             _logger.LogDebug("Instance {instanceId}: Found {count} resource groups to delete.", context.InstanceId, resourceGroups.Count());
             return resourceGroups.Select(rg => rg.Name).ToList();
         }
@@ -84,7 +90,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
             }
 
             _logger.LogDebug("Checking if resource group {resourceGroup} has locks...", name);
-            var locks = await _azureConnection.ManagementLocks.ListByResourceGroupAsync(name, true).ConfigureAwait(false);
+            var locks = await _azureConnection.ManagementLocks.ListByResourceGroupAsync(name, true).ConfigureAwait(true);
 
             if (locks.Any())
             {
@@ -96,7 +102,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
                 return;
             }
             _logger.LogInformation("Deleting resource group {resourceGroup}", name);
-            await _azureConnection.ResourceGroups.DeleteByNameAsync(name).ConfigureAwait(false);
+            await _azureConnection.ResourceGroups.DeleteByNameAsync(name).ConfigureAwait(true);
         }
     }
 }

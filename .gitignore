@@ -333,3 +333,4 @@ ASALocalRun/
 appsettings.Development.json
 publish.zip
 .vscode/
+developer-settings.json

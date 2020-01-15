@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "appName": {
@@ -84,9 +84,10 @@
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
                 "siteConfig": {
-                    "defaultDocuments": [],
+                    "defaultDocuments": [
+                    ],
                     "phpVersion": "",
-                    "use32BitWorkerProcess": false,
+                    "use32BitWorkerProcess": true,
                     "appSettings": [
                         {
                             "name": "AzureWebJobsStorage",
@@ -102,7 +103,7 @@
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
-                            "value": "~2"
+                            "value": "~3"
                         },
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
@@ -129,7 +130,7 @@
             },
             "properties": {
                 "ApplicationId": "[variables('applicationInsightsName')]",
-                "Request_Source": "IbizaWebAppExtensionCreate",
+                "Request_Source": "rest",
                 "Application_Type": "web"
             }
         }

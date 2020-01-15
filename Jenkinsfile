@@ -40,6 +40,7 @@ podTemplate(label: pod.label,
                 }
 
                 toAzureTestEnv {
+                    def buildNumber = (env.BUILD_NUMBER)
                     def ciRg = 'sub-cleaner-ci-' + buildNumber
                     def ciAppName = 'sub-cleaner-ci-' + buildNumber
 

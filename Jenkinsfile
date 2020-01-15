@@ -9,6 +9,7 @@ podTemplate(label: pod.label,
   ]
 ) {
     def sourceFolder = 'src'
+    def publishFolder = 'publish'
 
     node(pod.label) {
         stage('Checkout') {
@@ -30,7 +31,6 @@ podTemplate(label: pod.label,
         if (isTest(branch)){
             def zipName = 'publish.zip'
             def functionsProject = 'ValidationLibrary.AzureFunctions'
-            def publishFolder = 'publish'
 
             container('powershell'){
                 stage('Package') {

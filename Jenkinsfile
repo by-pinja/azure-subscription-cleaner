@@ -1,5 +1,6 @@
 library 'jenkins-ptcs-library@2.3.0'
 
+def isMaster(branchName) { return branchName == "master" }
 def isTest(branchName) { return branchName == "test" }
 
 podTemplate(label: pod.label,
@@ -11,6 +12,7 @@ podTemplate(label: pod.label,
     def branch = (env.BRANCH_NAME)
     def sourceFolder = 'src'
     def publishFolder = 'publish'
+    def environment = isMaster(branch) ? 'Production' : 'Development'
 
     node(pod.label) {
         stage('Checkout') {

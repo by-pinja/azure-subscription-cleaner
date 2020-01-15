@@ -38,6 +38,36 @@ podTemplate(label: pod.label,
                         pwsh -command "Compress-Archive -DestinationPath $zipName -Path $publishFolder/*"
                     """
                 }
+
+                toAzureTestEnv {
+                    def ciRg = 'sub-cleaner-ci-' + buildNumber
+                    def ciAppName = 'sub-cleaner-ci-' + buildNumber
+
+                    stage('Create temporary Resource Group'){
+                        sh """
+                            pwsh -command "New-AzResourceGroup -Name '$ciRg' -Location 'North Europe' -Tag @{subproject='2026956'; Description='Continuous Integration'}"
+                        """
+                    }
+                    stage('Create test environment'){
+                        sh """
+                            pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-ci -TemplateFile Deployment/azuredeploy.json -ResourceGroupName $ciRg -appName $ciAppName -environment $environment"
+                        """
+                    }
+                    try {
+                        stage('Publish to test environment') {
+                            sh """
+                                pwsh -command "Publish-AzWebApp -ResourceGroupName $ciRg -Name $ciAppName -ArchivePath $zipName -Force"
+                            """
+                        }
+                    }
+                    finally {
+                        stage('Delete test environment'){
+                            sh """
+                                pwsh -command "Remove-AzResourceGroup -Name '$ciRg' -Force"
+                            """
+                        }
+                    }
+                }
             }
         }
     }

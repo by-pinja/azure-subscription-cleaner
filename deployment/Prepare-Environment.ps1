@@ -31,5 +31,10 @@ New-AzResourceGroupDeployment `
     -appName $settingsJson.ResourceGroupName `
     -environment "Development"
 
+$createdServicePrincipal = Get-AzADServicePrincipal -DisplayName $settingsJson.ResourceGroupName
+New-AzRoleAssignment `
+    -ObjectId $createdServicePrincipal.Id `
+    -RoleDefinitionName 'Contributor'
+
 Write-Host 'Publishing...'
 .\Deployment\Publish.ps1 -ResourceGroup $settingsJson.ResourceGroupName

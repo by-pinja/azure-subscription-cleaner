@@ -1,4 +1,4 @@
-library 'jenkins-ptcs-library@2.3.0'
+library 'jenkins-ptcs-library@3.0.0'
 
 def isMaster(branchName) { return branchName == "master" }
 def isTest(branchName) { return branchName == "test" }

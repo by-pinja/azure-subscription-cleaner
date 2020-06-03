@@ -8,6 +8,7 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Protacon.AzureSubscriptionCleaner.SlackLib;
 
 namespace Protacon.AzureSubscriptionCleaner.CommandLine
 {
@@ -46,9 +47,16 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
 
         private static async Task ProcessOptions(ProgramOptions options, ServiceProvider serviceProvider)
         {
-
             var resourceGroupWrapper = serviceProvider.GetService<ResourceGroupWrapper>();
-            await resourceGroupWrapper.DeleteNonLockedResourceGroups(options.Simulate).ConfigureAwait(false);
+
+            var deletedResourceGroups = await resourceGroupWrapper.DeleteNonLockedResourceGroups(options.Simulate).ConfigureAwait(false);
+
+            if (!string.IsNullOrWhiteSpace(options.Channel))
+            {
+                var slackClient = serviceProvider.GetService<ISlackClient>();
+                var message = MessageUtil.CreateDeleteInformationMessage(options.Channel, deletedResourceGroups);
+                await slackClient.PostMessage(message).ConfigureAwait(false);
+            }
         }
 
         private static ServiceProvider BuildDependencyInjection()
@@ -75,7 +83,18 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
 
                     return BuildServicePrincipalConnection(servicePrincipalConfiguration);
                 })
+                .AddTransient(prodvider =>
+                {
+                    return config.GetSection("SlackClientSettings").Get<SlackClientSettings>();
+                })
                 .AddTransient<ResourceGroupWrapper>()
+                .AddHttpClient<ISlackClient, SlackClient>((provider, client) =>
+                {
+                    var slackClientSettings = provider.GetService<SlackClientSettings>();
+                    client.BaseAddress = new Uri("https://slack.com/api/");
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {slackClientSettings.BearerToken}");
+                })
+                .Services
                 .BuildServiceProvider();
         }
 

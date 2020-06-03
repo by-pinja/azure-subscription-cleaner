@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.AzureSubscriptionC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.AzureSubscriptionCleaner.CommandLine", "Protacon.AzureSubscriptionCleaner.CommandLine\Protacon.AzureSubscriptionCleaner.CommandLine.csproj", "{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.AzureSubscriptionCleaner.SlackLib", "Protacon.AzureSubscriptionCleaner.SlackLib\Protacon.AzureSubscriptionCleaner.SlackLib.csproj", "{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|x64.Build.0 = Release|Any CPU
 		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|x86.ActiveCfg = Release|Any CPU
 		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|x86.Build.0 = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|x64.Build.0 = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|x86.Build.0 = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|x64.ActiveCfg = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|x64.Build.0 = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|x86.ActiveCfg = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

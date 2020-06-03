@@ -11,7 +11,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
     public class SubscriptionCleaner
     {
         /// <summary>
-        ///  We want to avoid executing this during workdays so we'll
+        /// We want to avoid executing this during workdays so we'll
         /// execute during weekend
         /// {second} {minute} {hour} {day} {month} {day of the week}
         /// </summary>

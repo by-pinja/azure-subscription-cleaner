@@ -50,7 +50,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
                 "group2"
             };
 
-            mockContext.CallActivityAsync<IEnumerable<string>>(nameof(SubscriptionCleaner.GetResourceGroupsNames), string.Empty).Returns(Task.FromResult((IEnumerable<string>)groups));
+            mockContext.CallActivityAsync<IEnumerable<string>>(nameof(SubscriptionCleaner.GetResourceGroupNames), string.Empty).Returns(Task.FromResult((IEnumerable<string>)groups));
 
             await _cleaner.OchestrateSubscriptionCleanUp(mockContext);
 
@@ -76,7 +76,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
 
             _mockAzure.ResourceGroups.ListAsync(true).Returns(paged);
 
-            var result = await _cleaner.GetResourceGroupsNames(mockContext);
+            var result = await _cleaner.GetResourceGroupNames(mockContext);
             Assert.AreEqual(2, result.Count());
         }
 

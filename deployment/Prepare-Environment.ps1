@@ -29,12 +29,18 @@ New-AzResourceGroupDeployment `
     -TemplateFile 'Deployment/azuredeploy.json' `
     -ResourceGroupName $settingsJson.ResourceGroupName `
     -appName $settingsJson.ResourceGroupName `
-    -environment "Development"
+    -environment "Development" `
+    -slackBearerToken (ConvertTo-SecureString -String $settingsJson.SlackBearerToken -AsPlainText -Force)
 
 $createdServicePrincipal = Get-AzADServicePrincipal -DisplayName $settingsJson.ResourceGroupName
-New-AzRoleAssignment `
-    -ObjectId $createdServicePrincipal.Id `
-    -RoleDefinitionName 'Contributor'
+
+$existingRoleAssingment = Get-AzRoleAssignment -ObjectId $createdServicePrincipal.Id -RoleDefinitionName 'Contributor'
+
+if ( -Not ($existingRoleAssingment) ) {
+    New-AzRoleAssignment `
+        -ObjectId $createdServicePrincipal.Id `
+        -RoleDefinitionName 'Contributor'
+}
 
 Write-Host 'Publishing...'
 .\Deployment\Publish.ps1 -ResourceGroup $settingsJson.ResourceGroupName

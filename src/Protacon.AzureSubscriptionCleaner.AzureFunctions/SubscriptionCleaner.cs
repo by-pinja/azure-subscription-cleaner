@@ -5,6 +5,7 @@ using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
+using Protacon.AzureSubscriptionCleaner.SlackLib;
 
 namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
 {
@@ -18,11 +19,13 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
         private const string FirstSaturdayOfMonth = "0 0 0 1-7 * SAT";
         private readonly ILogger<SubscriptionCleaner> _logger;
         private readonly IAzure _azureConnection;
+        private readonly ISlackClient _slackClient;
 
-        public SubscriptionCleaner(ILogger<SubscriptionCleaner> logger, IAzure azureConnection)
+        public SubscriptionCleaner(ILogger<SubscriptionCleaner> logger, IAzure azureConnection, ISlackClient slackClient)
         {
-            _logger = logger;
-            _azureConnection = azureConnection;
+            _logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
+            _azureConnection = azureConnection ?? throw new System.ArgumentNullException(nameof(azureConnection));
+            _slackClient = slackClient ?? throw new System.ArgumentNullException(nameof(slackClient));
         }
 
         [FunctionName(nameof(TimerStart))]
@@ -55,20 +58,26 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
             {
                 _logger.LogDebug("Getting resource groups");
             }
-            var resourceGroupNames = await context.CallActivityAsync<IEnumerable<string>>(nameof(GetResourceGroupsNames), string.Empty).ConfigureAwait(true);
+            var resourceGroupNames = await context.CallActivityAsync<IEnumerable<string>>(nameof(GetResourceGroupNames), string.Empty).ConfigureAwait(true);
 
+            var deletedResourceGroupNames = new List<string>();
             foreach (var name in resourceGroupNames)
             {
                 if (!context.IsReplaying)
                 {
                     _logger.LogDebug("Calling delete function on {resourceGroupName}", name);
                 }
-                await context.CallActivityAsync(nameof(DeleteIfNotLocked), name).ConfigureAwait(true);
+                if (await context.CallActivityAsync<bool>(nameof(DeleteIfNotLocked), name).ConfigureAwait(true))
+                {
+                    deletedResourceGroupNames.Add(name);
+                }
             }
+
+            await context.CallActivityAsync(nameof(ReportToSlack), deletedResourceGroupNames).ConfigureAwait(true);
         }
 
-        [FunctionName(nameof(GetResourceGroupsNames))]
-        public async Task<IEnumerable<string>> GetResourceGroupsNames([ActivityTrigger] IDurableActivityContext context)
+        [FunctionName(nameof(GetResourceGroupNames))]
+        public async Task<IEnumerable<string>> GetResourceGroupNames([ActivityTrigger] IDurableActivityContext context)
         {
             if (context is null)
             {
@@ -82,7 +91,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
         }
 
         [FunctionName(nameof(DeleteIfNotLocked))]
-        public async Task DeleteIfNotLocked([ActivityTrigger] string name)
+        public async Task<bool> DeleteIfNotLocked([ActivityTrigger] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -99,10 +108,18 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
                     _logger.LogDebug("Lock found in resource group {resourceGroup}, id: {id}, level: {level} notes: {notes}", name, managementLock.Id, managementLock.Level, managementLock.Notes);
                 }
                 _logger.LogInformation("Resource group {resourceGroup} had at least one lock, skipping deletion.", name);
-                return;
+                return false;
             }
             _logger.LogInformation("Deleting resource group {resourceGroup}", name);
             await _azureConnection.ResourceGroups.DeleteByNameAsync(name).ConfigureAwait(true);
+            return true;
+        }
+
+        [FunctionName(nameof(ReportToSlack))]
+        public async Task ReportToSlack([ActivityTrigger] IReadOnlyList<string> deletedResourceGroups)
+        {
+            var message = MessageUtil.CreateDeleteInformationMessage("hjni-testi", deletedResourceGroups);
+            await _slackClient.PostMessage(message).ConfigureAwait(false);
         }
     }
 }

@@ -54,7 +54,7 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
             if (!string.IsNullOrWhiteSpace(options.Channel))
             {
                 var slackClient = serviceProvider.GetService<ISlackClient>();
-                var message = MessageUtil.CreateDeleteInformationMessage(options.Channel, deletedResourceGroups);
+                var message = MessageUtil.CreateDeleteInformationMessage(options.Channel, deletedResourceGroups, null);
                 await slackClient.PostMessage(message).ConfigureAwait(false);
             }
         }

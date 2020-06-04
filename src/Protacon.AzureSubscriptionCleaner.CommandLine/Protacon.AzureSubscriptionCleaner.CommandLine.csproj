@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <CodeAnalysisRuleSet>.\Protacon.AzureSubscriptionCleaner.CommandLine.ruleset</CodeAnalysisRuleSet>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>

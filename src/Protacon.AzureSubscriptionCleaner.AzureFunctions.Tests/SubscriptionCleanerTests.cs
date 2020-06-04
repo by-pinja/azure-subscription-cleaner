@@ -37,13 +37,14 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
             var starter = Substitute.For<IDurableOrchestrationClient>();
             await _cleaner.TimerStart(timer, starter);
 
-            await starter.Received().StartNewAsync(nameof(SubscriptionCleaner.OchestrateSubscriptionCleanUp), null);
+            await starter.Received().StartNewAsync(nameof(SubscriptionCleaner.OchestrateSubscriptionCleanUp), Arg.Any<string>(), Arg.Any<DateTime>());
         }
 
         [Test]
         public async Task DoMonitoring_CallsStuff()
         {
             var mockContext = Substitute.For<IDurableOrchestrationContext>();
+            mockContext.GetInput<DateTime>().Returns(DateTime.UtcNow);
 
             var groups = new List<string>()
             {
@@ -59,7 +60,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
 
             await mockContext.Received().CallActivityAsync<bool>(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[0]);
             await mockContext.Received().CallActivityAsync<bool>(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[1]);
-            await mockContext.Received().CallActivityAsync(nameof(SubscriptionCleaner.ReportToSlack), Arg.Any<List<string>>());
+            await mockContext.Received().CallActivityAsync(nameof(SubscriptionCleaner.ReportToSlack), Arg.Any<SlackReportingContext>());
         }
 
         [Test]

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.Fluent;
@@ -23,9 +24,9 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
 
         public SubscriptionCleaner(ILogger<SubscriptionCleaner> logger, IAzure azureConnection, ISlackClient slackClient)
         {
-            _logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
-            _azureConnection = azureConnection ?? throw new System.ArgumentNullException(nameof(azureConnection));
-            _slackClient = slackClient ?? throw new System.ArgumentNullException(nameof(slackClient));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _azureConnection = azureConnection ?? throw new ArgumentNullException(nameof(azureConnection));
+            _slackClient = slackClient ?? throw new ArgumentNullException(nameof(slackClient));
         }
 
         [FunctionName(nameof(TimerStart))]
@@ -33,16 +34,16 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
         {
             if (timer is null)
             {
-                throw new System.ArgumentNullException(nameof(timer));
+                throw new ArgumentNullException(nameof(timer));
             }
 
             if (starter is null)
             {
-                throw new System.ArgumentNullException(nameof(starter));
+                throw new ArgumentNullException(nameof(starter));
             }
 
             _logger.LogTrace("{class}, Next: {next}, Last: {last}", nameof(TimerStart), timer.ScheduleStatus.Next, timer.ScheduleStatus.Last);
-            string instanceId = await starter.StartNewAsync(nameof(OchestrateSubscriptionCleanUp), null).ConfigureAwait(true);
+            string instanceId = await starter.StartNewAsync(nameof(OchestrateSubscriptionCleanUp), Guid.NewGuid().ToString(), timer.ScheduleStatus.Next).ConfigureAwait(true);
             _logger.LogInformation($"Started orchestration with ID = '{instanceId}'.");
         }
 
@@ -51,7 +52,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
         {
             if (context is null)
             {
-                throw new System.ArgumentNullException(nameof(context));
+                throw new ArgumentNullException(nameof(context));
             }
 
             if (!context.IsReplaying)
@@ -73,7 +74,12 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
                 }
             }
 
-            await context.CallActivityAsync(nameof(ReportToSlack), deletedResourceGroupNames).ConfigureAwait(true);
+            var slackContext = new SlackReportingContext
+            {
+                NextOccurrence = context.GetInput<DateTime>(),
+                DeletedResourceGroups = deletedResourceGroupNames
+            };
+            await context.CallActivityAsync(nameof(ReportToSlack), slackContext).ConfigureAwait(true);
         }
 
         [FunctionName(nameof(GetResourceGroupNames))]
@@ -116,9 +122,14 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
         }
 
         [FunctionName(nameof(ReportToSlack))]
-        public async Task ReportToSlack([ActivityTrigger] IReadOnlyList<string> deletedResourceGroups)
+        public async Task ReportToSlack([ActivityTrigger] SlackReportingContext slackReportingContext)
         {
-            var message = MessageUtil.CreateDeleteInformationMessage("hjni-testi", deletedResourceGroups);
+            if (slackReportingContext is null)
+            {
+                throw new ArgumentNullException(nameof(slackReportingContext));
+            }
+
+            var message = MessageUtil.CreateDeleteInformationMessage("hjni-testi", slackReportingContext.DeletedResourceGroups, slackReportingContext.NextOccurrence);
             await _slackClient.PostMessage(message).ConfigureAwait(false);
         }
     }

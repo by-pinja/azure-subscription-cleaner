@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Protacon.AzureSubscriptionCleaner.SlackLib.Dto;
@@ -6,7 +7,7 @@ namespace Protacon.AzureSubscriptionCleaner.SlackLib
 {
     public static class MessageUtil
     {
-        public static PostMessage CreateDeleteInformationMessage(string channel, IReadOnlyList<string> deletedResourceGroups)
+        public static PostMessage CreateDeleteInformationMessage(string channel, IReadOnlyList<string> deletedResourceGroups, DateTimeOffset? nextTime)
         {
             var messageContent = new StringBuilder();
             messageContent.AppendLine("Following resource groups where deleted in cleanup: ");
@@ -14,6 +15,11 @@ namespace Protacon.AzureSubscriptionCleaner.SlackLib
             {
                 messageContent.AppendLine(deletedResourceGroup);
             }
+            if (nextTime.HasValue)
+            {
+                messageContent.AppendLine($"Next cleanup (UTC): {nextTime}");
+            }
+
             var message = new PostMessage
             {
                 Channel = channel,

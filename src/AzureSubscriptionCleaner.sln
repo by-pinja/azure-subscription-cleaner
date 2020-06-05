@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.AzureSubscriptionCleaner.AzureFunctions", "Protacon.AzureSubscriptionCleaner.AzureFunctions\Protacon.AzureSubscriptionCleaner.AzureFunctions.csproj", "{01ADBE65-5236-4EB3-8E5D-0ED0D763CF88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pinja.AzureSubscriptionCleaner.AzureFunctions", "Pinja.AzureSubscriptionCleaner.AzureFunctions\Pinja.AzureSubscriptionCleaner.AzureFunctions.csproj", "{01ADBE65-5236-4EB3-8E5D-0ED0D763CF88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests", "Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests\Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests.csproj", "{C27BBA65-9671-43D7-BA49-53C9845F76CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests", "Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests\Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests.csproj", "{C27BBA65-9671-43D7-BA49-53C9845F76CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.AzureSubscriptionCleaner.CommandLine", "Protacon.AzureSubscriptionCleaner.CommandLine\Protacon.AzureSubscriptionCleaner.CommandLine.csproj", "{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pinja.AzureSubscriptionCleaner.CommandLine", "Pinja.AzureSubscriptionCleaner.CommandLine\Pinja.AzureSubscriptionCleaner.CommandLine.csproj", "{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pinja.AzureSubscriptionCleaner.SlackLib", "Pinja.AzureSubscriptionCleaner.SlackLib\Pinja.AzureSubscriptionCleaner.SlackLib.csproj", "{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,5 +60,17 @@ Global
 		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|x64.Build.0 = Release|Any CPU
 		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|x86.ActiveCfg = Release|Any CPU
 		{BAB39E52-05DC-4DF5-9134-1216D3DE74DC}.Release|x86.Build.0 = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|x64.Build.0 = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Debug|x86.Build.0 = Debug|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|x64.ActiveCfg = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|x64.Build.0 = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|x86.ActiveCfg = Release|Any CPU
+		{7DAF6368-8BE2-4FBE-AC0A-F1F815EADD5A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

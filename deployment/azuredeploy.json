@@ -25,13 +25,25 @@
                 "Development",
                 "Production"
             ]
+        },
+        "slackBearerToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Bearer token that is used for slack messages"
+            }
+        },
+        "slackChannel": {
+            "type": "string",
+            "metadata": {
+                "description": "Channel for slack messages."
+            }
         }
     },
     "variables": {
         "functionAppName": "[parameters('appName')]",
         "hostingPlanName": "[parameters('appName')]",
         "applicationInsightsName": "[parameters('appName')]",
-        "storageAccountName": "[uniqueString(subscription().subscriptionId)]",
+        "storageAccountName": "[uniqueString(resourceGroup().id)]",
         "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
     },
     "resources": [
@@ -84,8 +96,7 @@
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
                 "siteConfig": {
-                    "defaultDocuments": [
-                    ],
+                    "defaultDocuments": [],
                     "phpVersion": "",
                     "use32BitWorkerProcess": true,
                     "appSettings": [
@@ -112,6 +123,14 @@
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                             "value": "[reference(resourceId('microsoft.insights/components/', variables('applicationInsightsName')), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "SlackClientSettings:BearerToken",
+                            "value": "[parameters('slackBearerToken')]"
+                        },
+                        {
+                            "name": "ReportingConfiguration:SlackChannel",
+                            "value": "[parameters('slackChannel')]"
                         }
                     ]
                 }

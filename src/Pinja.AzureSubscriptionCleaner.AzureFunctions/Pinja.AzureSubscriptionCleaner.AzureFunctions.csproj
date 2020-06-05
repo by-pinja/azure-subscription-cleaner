@@ -3,9 +3,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <CodeAnalysisRuleSet>.\Protacon.AzureSubscriptionCleaner.AzureFunctions.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>.\Pinja.AzureSubscriptionCleaner.AzureFunctions.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  
   <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.0.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.DurableTask" Version="2.2.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -13,6 +15,10 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.7" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.33.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pinja.AzureSubscriptionCleaner.SlackLib\Pinja.AzureSubscriptionCleaner.SlackLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

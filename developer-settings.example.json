@@ -1,5 +1,6 @@
 {
     "ResourceGroupName": "Name for the testing resource group you wish to create/use",
     "Location": "North Europe",
-    "SlackBearerToken": "bearer token for slack api here"
+    "SlackBearerToken": "bearer token for slack api here",
+    "SlackChannel": "slack-channel-for-messages"
 }

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Protacon.AzureSubscriptionCleaner.SlackLib;
+using static Protacon.AzureSubscriptionCleaner.SlackLib.MessageUtil;
 
 namespace Protacon.AzureSubscriptionCleaner.CommandLine
 {
@@ -22,6 +23,7 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
             var logger = dependencyInjection.GetService<ILogger<Program>>();
             var start = DateTime.UtcNow;
             logger.LogDebug("Starting time: {time}", start);
+
             Parser
                 .Default
                 .ParseArguments<ProgramOptions>(args)
@@ -36,12 +38,13 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
                                 errors.First().Tag == ErrorType.VersionRequestedError ||
                                 errors.First().Tag == ErrorType.NoVerbSelectedError))
                         {
-                            return Task.FromResult(0);
+                            return Task.CompletedTask;
                         }
 
                         logger.LogWarning("Something went wrong while parsing command(s): Errors: {errors}", string.Join(", ", errors));
-                        return Task.FromResult(0);
+                        return Task.CompletedTask;
                     }).Wait();
+
             logger.LogDebug("Run duration: {duration}", DateTime.UtcNow - start);
         }
 
@@ -54,7 +57,14 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
             if (!string.IsNullOrWhiteSpace(options.Channel))
             {
                 var slackClient = serviceProvider.GetService<ISlackClient>();
-                var message = MessageUtil.CreateDeleteInformationMessage(options.Channel, deletedResourceGroups, null);
+                var context = new MessageContext
+                {
+                    DeletedResourceGroups = deletedResourceGroups,
+                    NextTime = null,
+                    WasSimulated = options.Simulate
+                };
+
+                var message = MessageUtil.CreateDeleteInformationMessage(options.Channel, context);
                 await slackClient.PostMessage(message).ConfigureAwait(false);
             }
         }
@@ -91,6 +101,11 @@ namespace Protacon.AzureSubscriptionCleaner.CommandLine
                 .AddHttpClient<ISlackClient, SlackClient>((provider, client) =>
                 {
                     var slackClientSettings = provider.GetService<SlackClientSettings>();
+                    if (slackClientSettings == null || string.IsNullOrWhiteSpace(slackClientSettings.BearerToken))
+                    {
+                        throw new ArgumentException("SlackClientSettings must be defined for Slack communication.");
+                    }
+
                     client.BaseAddress = new Uri("https://slack.com/api/");
                     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {slackClientSettings.BearerToken}");
                 })

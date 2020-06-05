@@ -30,6 +30,7 @@ New-AzResourceGroupDeployment `
     -ResourceGroupName $settingsJson.ResourceGroupName `
     -appName $settingsJson.ResourceGroupName `
     -environment "Development" `
+    -slackChannel $settingsJson.SlackChannel `
     -slackBearerToken (ConvertTo-SecureString -String $settingsJson.SlackBearerToken -AsPlainText -Force)
 
 $createdServicePrincipal = Get-AzADServicePrincipal -DisplayName $settingsJson.ResourceGroupName

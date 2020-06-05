@@ -21,12 +21,14 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
         private readonly ILogger<SubscriptionCleaner> _logger;
         private readonly IAzure _azureConnection;
         private readonly ISlackClient _slackClient;
+        private readonly ReportingConfiguration _reportingConfiguration;
 
-        public SubscriptionCleaner(ILogger<SubscriptionCleaner> logger, IAzure azureConnection, ISlackClient slackClient)
+        public SubscriptionCleaner(ILogger<SubscriptionCleaner> logger, IAzure azureConnection, ISlackClient slackClient, ReportingConfiguration reportingConfiguration)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _azureConnection = azureConnection ?? throw new ArgumentNullException(nameof(azureConnection));
             _slackClient = slackClient ?? throw new ArgumentNullException(nameof(slackClient));
+            _reportingConfiguration = reportingConfiguration ?? throw new ArgumentNullException(nameof(reportingConfiguration));
         }
 
         [FunctionName(nameof(TimerStart))]
@@ -129,7 +131,12 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
                 throw new ArgumentNullException(nameof(slackReportingContext));
             }
 
-            var message = MessageUtil.CreateDeleteInformationMessage("hjni-testi", slackReportingContext.DeletedResourceGroups, slackReportingContext.NextOccurrence);
+            var context = new MessageUtil.MessageContext
+            {
+                DeletedResourceGroups = slackReportingContext.DeletedResourceGroups,
+                NextTime = slackReportingContext.NextOccurrence,
+            };
+            var message = MessageUtil.CreateDeleteInformationMessage(_reportingConfiguration.SlackChannel, context);
             await _slackClient.PostMessage(message).ConfigureAwait(false);
         }
     }

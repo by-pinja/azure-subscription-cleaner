@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Protacon.AzureSubscriptionCleaner.SlackLib.Dto;
 
@@ -7,17 +8,30 @@ namespace Protacon.AzureSubscriptionCleaner.SlackLib
 {
     public static class MessageUtil
     {
-        public static PostMessage CreateDeleteInformationMessage(string channel, IReadOnlyList<string> deletedResourceGroups, DateTimeOffset? nextTime)
+        public static PostMessage CreateDeleteInformationMessage(string channel, MessageContext messageContext)
         {
             var messageContent = new StringBuilder();
-            messageContent.AppendLine("Following resource groups where deleted in cleanup: ");
-            foreach (var deletedResourceGroup in deletedResourceGroups)
+            if (messageContext.WasSimulated)
             {
-                messageContent.AppendLine(deletedResourceGroup);
+                messageContent.AppendLine("*THIS IS A SIMULATION*, no changes were made.");
             }
-            if (nextTime.HasValue)
+
+            if (messageContext.DeletedResourceGroups.Any())
             {
-                messageContent.AppendLine($"Next cleanup (UTC): {nextTime}");
+                messageContent.AppendLine("Following resource groups where deleted in cleanup: ");
+                foreach (var deletedResourceGroup in messageContext.DeletedResourceGroups)
+                {
+                    messageContent.AppendLine(deletedResourceGroup);
+                }
+            }
+            else
+            {
+                messageContent.AppendLine("No resource groups were deleted.");
+            }
+
+            if (messageContext.NextTime.HasValue)
+            {
+                messageContent.AppendLine($"Next cleanup (UTC): {messageContext.NextTime}");
             }
 
             var message = new PostMessage
@@ -36,6 +50,13 @@ namespace Protacon.AzureSubscriptionCleaner.SlackLib
                 }
             };
             return message;
+        }
+
+        public class MessageContext
+        {
+            public IReadOnlyList<string> DeletedResourceGroups { get; set; }
+            public DateTimeOffset? NextTime { get; set; }
+            public bool WasSimulated { get; set; }
         }
     }
 }

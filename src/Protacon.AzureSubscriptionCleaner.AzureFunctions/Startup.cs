@@ -43,6 +43,10 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
                 })
                 .AddTransient(prodvider =>
                 {
+                    return config.GetSection("ReportingConfiguration").Get<ReportingConfiguration>();
+                })
+                .AddTransient(prodvider =>
+                {
                     return config.GetSection("SlackClientSettings").Get<SlackClientSettings>();
                 })
                 .AddLogging();

@@ -31,6 +31,12 @@
             "metadata": {
                 "description": "Bearer token that is used for slack messages"
             }
+        },
+        "slackChannel": {
+            "type": "string",
+            "metadata": {
+                "description": "Channel for slack messages."
+            }
         }
     },
     "variables": {
@@ -121,6 +127,10 @@
                         {
                             "name": "SlackClientSettings:BearerToken",
                             "value": "[parameters('slackBearerToken')]"
+                        },
+                        {
+                            "name": "ReportingConfiguration:SlackChannel",
+                            "value": "[parameters('slackChannel')]"
                         }
                     ]
                 }

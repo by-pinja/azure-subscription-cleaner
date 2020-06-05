@@ -13,6 +13,7 @@ using Microsoft.Azure.WebJobs.Extensions.Timers;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Protacon.AzureSubscriptionCleaner.SlackLib;
 
 namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
 {
@@ -26,7 +27,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
         {
             var mockLogger = Substitute.For<ILogger<SubscriptionCleaner>>();
             _mockAzure = Substitute.For<IAzure>();
-            _cleaner = new SubscriptionCleaner(mockLogger, _mockAzure);
+            _cleaner = new SubscriptionCleaner(mockLogger, _mockAzure, Substitute.For<ISlackClient>(), Substitute.For<ReportingConfiguration>());
         }
 
         [Test]
@@ -36,13 +37,14 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
             var starter = Substitute.For<IDurableOrchestrationClient>();
             await _cleaner.TimerStart(timer, starter);
 
-            await starter.Received().StartNewAsync(nameof(SubscriptionCleaner.OchestrateSubscriptionCleanUp), null);
+            await starter.Received().StartNewAsync(nameof(SubscriptionCleaner.OchestrateSubscriptionCleanUp), Arg.Any<string>(), Arg.Any<DateTime>());
         }
 
         [Test]
         public async Task DoMonitoring_CallsStuff()
         {
             var mockContext = Substitute.For<IDurableOrchestrationContext>();
+            mockContext.GetInput<DateTime>().Returns(DateTime.UtcNow);
 
             var groups = new List<string>()
             {
@@ -50,12 +52,15 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
                 "group2"
             };
 
-            mockContext.CallActivityAsync<IEnumerable<string>>(nameof(SubscriptionCleaner.GetResourceGroupsNames), string.Empty).Returns(Task.FromResult((IEnumerable<string>)groups));
+            mockContext.CallActivityAsync<IEnumerable<string>>(nameof(SubscriptionCleaner.GetResourceGroupNames), string.Empty).Returns(Task.FromResult((IEnumerable<string>)groups));
+            mockContext.CallActivityAsync<bool>(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[0]).Returns(Task.FromResult(true));
+            mockContext.CallActivityAsync<bool>(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[1]).Returns(Task.FromResult(true));
 
             await _cleaner.OchestrateSubscriptionCleanUp(mockContext);
 
-            await mockContext.Received().CallActivityAsync(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[0]);
-            await mockContext.Received().CallActivityAsync(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[1]);
+            await mockContext.Received().CallActivityAsync<bool>(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[0]);
+            await mockContext.Received().CallActivityAsync<bool>(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[1]);
+            await mockContext.Received().CallActivityAsync(nameof(SubscriptionCleaner.ReportToSlack), Arg.Any<SlackReportingContext>());
         }
 
         [Test]
@@ -76,7 +81,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
 
             _mockAzure.ResourceGroups.ListAsync(true).Returns(paged);
 
-            var result = await _cleaner.GetResourceGroupsNames(mockContext);
+            var result = await _cleaner.GetResourceGroupNames(mockContext);
             Assert.AreEqual(2, result.Count());
         }
 

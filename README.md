@@ -1,4 +1,5 @@
 # Azure Subscription Cleaner
+
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Build Status](https://jenkins.protacon.cloud/buildStatus/icon?job=www.github.com/azure-subscription-cleaner/master)](https://jenkins.protacon.cloud/blue/organizations/jenkins/www.github.com%2Fazure-subscription-cleaner/activity)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=protacon/azure-subscription-cleaner&identifier=204444972)](https://dependabot.com)
@@ -17,16 +18,19 @@ documentation from more information.
 
 This project requires [dotnet core](https://www.microsoft.com/net/download),
 see image used in Jenkinsfile for specific requirements.
-```
+
+```cmd
 dotnet build .\src\
 ```
 
 ## Testing
-```
+
+```cmd
 dotnet test .\src\
 ```
 
 ## Command line tool
+
 This section handles usage of CommandeLine-usage. This is mostly used for
 testing and developing this tool.
 
@@ -41,31 +45,49 @@ then overriden from `appsettings.Development.json` if it exists.
 `ServicePrincipalConfiguration` is used to connect to Azure. These can be
 read and created from Azure AD using Azure Portal (or powershell etc.)
 
+`SlackClientSettings` are used to send messages to slack. This is not mandatory
+in Command line tool. If `-c <channel>` parameter is used, settings are
+required.
+
 Example of appsettings.Development.json
-```
+
+```json
 {
     "ServicePrincipalConfiguration": {
         "ClientId": "e15bf1a8-c8b5-11e9-a32f-2a2ae2dbcce4",
         "ClientSecret": "this-was-very-secret",
         "TenantId": "e15c04c2-c8b5-11e9-a32f-2a2ae2dbcce4"
+    },
+    "SlackClientSettings": {
+        "BearerToken": "token-tokenmock-mocktoken"
     }
 }
 ```
 
 ### Usage
+
 For up-to-date usage help:
-```
+
+```cmd
 dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine -- --help
 ```
 
 For simulated run:
-```
+
+```cmd
 dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine -- -s
 ```
 
 For actual run (this actually deletes stuff!):
-```
+
+```cmd
 dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine --
+```
+
+Actual run with Slack reporting
+
+```cmd
+dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine -- -c slack-channel
 ```
 
 ## Deployment

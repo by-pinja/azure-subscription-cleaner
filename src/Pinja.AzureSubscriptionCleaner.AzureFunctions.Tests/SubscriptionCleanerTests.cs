@@ -13,9 +13,9 @@ using Microsoft.Azure.WebJobs.Extensions.Timers;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
-using Protacon.AzureSubscriptionCleaner.SlackLib;
+using Pinja.AzureSubscriptionCleaner.SlackLib;
 
-namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
+namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
 {
     public class SubscriptionCleanerTests
     {

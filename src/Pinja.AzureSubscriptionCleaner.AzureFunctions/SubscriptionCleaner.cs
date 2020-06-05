@@ -6,9 +6,9 @@ using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
-using Protacon.AzureSubscriptionCleaner.SlackLib;
+using Pinja.AzureSubscriptionCleaner.SlackLib;
 
-namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
+namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
 {
     public class SubscriptionCleaner
     {

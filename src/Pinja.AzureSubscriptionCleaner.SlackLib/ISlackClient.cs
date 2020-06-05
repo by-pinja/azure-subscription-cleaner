@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Protacon.AzureSubscriptionCleaner.SlackLib.Dto;
+using Pinja.AzureSubscriptionCleaner.SlackLib.Dto;
 
-namespace Protacon.AzureSubscriptionCleaner.SlackLib
+namespace Pinja.AzureSubscriptionCleaner.SlackLib
 {
     public interface ISlackClient
     {

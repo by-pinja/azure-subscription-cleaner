@@ -2,7 +2,7 @@
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Build Status](https://jenkins.protacon.cloud/buildStatus/icon?job=www.github.com/azure-subscription-cleaner/master)](https://jenkins.protacon.cloud/blue/organizations/jenkins/www.github.com%2Fazure-subscription-cleaner/activity)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=protacon/azure-subscription-cleaner&identifier=204444972)](https://dependabot.com)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=by-pinja/azure-subscription-cleaner&identifier=204444972)](https://dependabot.com)
 
 This is still WIP
 
@@ -69,30 +69,30 @@ Example of appsettings.Development.json
 For up-to-date usage help:
 
 ```cmd
-dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine -- --help
+dotnet run --project .\src\Pinja.AzureSubscriptionCleaner.CommandLine -- --help
 ```
 
 For simulated run:
 
 ```cmd
-dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine -- -s
+dotnet run --project .\src\Pinja.AzureSubscriptionCleaner.CommandLine -- -s
 ```
 
 For actual run (this actually deletes stuff!):
 
 ```cmd
-dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine --
+dotnet run --project .\src\Pinja.AzureSubscriptionCleaner.CommandLine --
 ```
 
 Actual run with Slack reporting
 
 ```cmd
-dotnet run --project .\src\Protacon.AzureSubscriptionCleaner.CommandLine -- -c slack-channel
+dotnet run --project .\src\Pinja.AzureSubscriptionCleaner.CommandLine -- -c slack-channel
 ```
 
 ## Deployment
 
-Project `Protacon.AzureSubscriptionCleaner.AzureFunctions` can be deployed to Azure as Azure Function.
+Project `Pinja.AzureSubscriptionCleaner.AzureFunctions` can be deployed to Azure as Azure Function.
 
 Create copy from `developer-settings.example.json` as `developer-settings.json`
 with your own values and execute `deployment\Prepare-Environment.ps1`

@@ -6,7 +6,7 @@
             "Host.Results": "Information",
             "Function": "Information",
             "Host.Aggregator": "Information",
-            "Protacon": "Trace"
+            "Pinja": "Trace"
         },
         "applicationInsights": {}
     },

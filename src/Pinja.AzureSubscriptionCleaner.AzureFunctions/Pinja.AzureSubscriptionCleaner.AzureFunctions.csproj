@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <CodeAnalysisRuleSet>.\Protacon.AzureSubscriptionCleaner.AzureFunctions.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>.\Pinja.AzureSubscriptionCleaner.AzureFunctions.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   
   <ItemGroup>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Protacon.AzureSubscriptionCleaner.SlackLib\Protacon.AzureSubscriptionCleaner.SlackLib.csproj" />
+    <ProjectReference Include="..\Pinja.AzureSubscriptionCleaner.SlackLib\Pinja.AzureSubscriptionCleaner.SlackLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

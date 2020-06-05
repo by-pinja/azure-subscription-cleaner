@@ -1,4 +1,4 @@
-namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
+namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
 {
     /// <summary>
     /// This is used to automatically map reporting configuration from IConfiguration

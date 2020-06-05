@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
-    <CodeAnalysisRuleSet>.\Protacon.AzureSubscriptionCleaner.CommandLine.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>.\Pinja.AzureSubscriptionCleaner.CommandLine.ruleset</CodeAnalysisRuleSet>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Protacon.AzureSubscriptionCleaner.SlackLib\Protacon.AzureSubscriptionCleaner.SlackLib.csproj" />
+    <ProjectReference Include="..\Pinja.AzureSubscriptionCleaner.SlackLib\Pinja.AzureSubscriptionCleaner.SlackLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

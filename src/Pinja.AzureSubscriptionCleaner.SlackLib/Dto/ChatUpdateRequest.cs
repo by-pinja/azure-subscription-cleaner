@@ -1,10 +1,12 @@
-#pragma warning disable CA1819 // This is a DTO
 using Newtonsoft.Json;
 
-namespace Protacon.AzureSubscriptionCleaner.SlackLib.Dto
+namespace Pinja.AzureSubscriptionCleaner.SlackLib.Dto
 {
-    public class PostMessage
+    public class ChatUpdateRequest
     {
+        [JsonProperty("ts")]
+        public string TimeStamp { get; set; }
+
         [JsonProperty("channel")]
         public string Channel { get; set; }
 
@@ -15,4 +17,3 @@ namespace Protacon.AzureSubscriptionCleaner.SlackLib.Dto
         public Section[] Blocks { get; set; }
     }
 }
-#pragma warning restore CA1819

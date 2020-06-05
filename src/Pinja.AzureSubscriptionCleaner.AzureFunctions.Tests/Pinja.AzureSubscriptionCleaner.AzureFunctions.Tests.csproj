@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Protacon.AzureSubscriptionCleaner.AzureFunctions\Protacon.AzureSubscriptionCleaner.AzureFunctions.csproj" />
+    <ProjectReference Include="..\Pinja.AzureSubscriptionCleaner.AzureFunctions\Pinja.AzureSubscriptionCleaner.AzureFunctions.csproj" />
   </ItemGroup>
 
 </Project>

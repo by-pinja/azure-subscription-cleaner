@@ -1,4 +1,4 @@
-namespace Protacon.AzureSubscriptionCleaner.SlackLib
+namespace Pinja.AzureSubscriptionCleaner.SlackLib
 {
     public class SlackResponse
     {

@@ -1,4 +1,4 @@
-namespace Protacon.AzureSubscriptionCleaner.SlackLib
+namespace Pinja.AzureSubscriptionCleaner.SlackLib
 {
     /// <summary>
     /// Thrown when something goes wrong with Slack API

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using CommandLine;
 using CommandLine.Text;
 
-namespace Protacon.AzureSubscriptionCleaner.CommandLine
+namespace Pinja.AzureSubscriptionCleaner.CommandLine
 {
     public class ProgramOptions
     {

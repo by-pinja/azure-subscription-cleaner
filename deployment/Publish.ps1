@@ -1,9 +1,9 @@
 ##############################################################################
 #.SYNOPSIS
-# Packs and publishes Protacon.AzureSubscriptionCleaner.AzureFunctions to Azure.
+# Packs and publishes Pinja.AzureSubscriptionCleaner.AzureFunctions to Azure.
 #
 #.DESCRIPTION
-# Packs and publishes Protacon.AzureSubscriptionCleaner.AzureFunctions to Azure.
+# Packs and publishes Pinja.AzureSubscriptionCleaner.AzureFunctions to Azure.
 # Scripts expects that the web app is already created.
 #
 # This assumes that user has already logged in with Azure Powershell
@@ -24,7 +24,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $publishFolder = 'publish'
-$azureFunctionProject = 'src\Protacon.AzureSubscriptionCleaner.AzureFunctions';
+$azureFunctionProject = 'src\Pinja.AzureSubscriptionCleaner.AzureFunctions';
 
 # delete any previous publish
 if (Test-path $publishFolder) { Remove-Item -Recurse -Force $publishFolder }

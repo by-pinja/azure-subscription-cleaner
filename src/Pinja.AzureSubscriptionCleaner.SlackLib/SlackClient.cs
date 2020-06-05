@@ -4,9 +4,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Protacon.AzureSubscriptionCleaner.SlackLib.Dto;
+using Pinja.AzureSubscriptionCleaner.SlackLib.Dto;
 
-namespace Protacon.AzureSubscriptionCleaner.SlackLib
+namespace Pinja.AzureSubscriptionCleaner.SlackLib
 {
     /// <summary>
     /// Wrapper for Slack API

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Protacon.AzureSubscriptionCleaner.SlackLib.Dto;
+using Pinja.AzureSubscriptionCleaner.SlackLib.Dto;
 
-namespace Protacon.AzureSubscriptionCleaner.SlackLib
+namespace Pinja.AzureSubscriptionCleaner.SlackLib
 {
     public static class MessageUtil
     {

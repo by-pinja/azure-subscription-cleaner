@@ -6,12 +6,12 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Protacon.AzureSubscriptionCleaner.AzureFunctions;
-using Protacon.AzureSubscriptionCleaner.SlackLib;
+using Pinja.AzureSubscriptionCleaner.AzureFunctions;
+using Pinja.AzureSubscriptionCleaner.SlackLib;
 
 
 [assembly: FunctionsStartup(typeof(Startup))]
-namespace Protacon.AzureSubscriptionCleaner.AzureFunctions
+namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
 {
     public class Startup : FunctionsStartup
     {

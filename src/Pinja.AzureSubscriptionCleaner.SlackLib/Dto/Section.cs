@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Protacon.AzureSubscriptionCleaner.SlackLib.Dto
+namespace Pinja.AzureSubscriptionCleaner.SlackLib.Dto
 {
     public class Section
     {

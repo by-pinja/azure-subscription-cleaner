@@ -8,10 +8,10 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Protacon.AzureSubscriptionCleaner.SlackLib;
-using static Protacon.AzureSubscriptionCleaner.SlackLib.MessageUtil;
+using Pinja.AzureSubscriptionCleaner.SlackLib;
+using static Pinja.AzureSubscriptionCleaner.SlackLib.MessageUtil;
 
-namespace Protacon.AzureSubscriptionCleaner.CommandLine
+namespace Pinja.AzureSubscriptionCleaner.CommandLine
 {
 #pragma warning disable CA1052
     public class Program

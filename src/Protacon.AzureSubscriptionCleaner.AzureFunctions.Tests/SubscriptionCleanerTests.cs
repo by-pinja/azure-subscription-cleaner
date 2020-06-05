@@ -27,7 +27,7 @@ namespace Protacon.AzureSubscriptionCleaner.AzureFunctions.Tests
         {
             var mockLogger = Substitute.For<ILogger<SubscriptionCleaner>>();
             _mockAzure = Substitute.For<IAzure>();
-            _cleaner = new SubscriptionCleaner(mockLogger, _mockAzure, Substitute.For<ISlackClient>());
+            _cleaner = new SubscriptionCleaner(mockLogger, _mockAzure, Substitute.For<ISlackClient>(), Substitute.For<ReportingConfiguration>());
         }
 
         [Test]

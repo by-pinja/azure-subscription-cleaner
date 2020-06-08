@@ -47,29 +47,28 @@ podTemplate(label: pod.label,
                         def ciRg = 'sub-cleaner-ci-' + buildNumber
                         def ciAppName = 'sub-cleaner-ci-' + buildNumber
 
-                        stage('Create temporary Resource Group'){
-                            sh """
-                                pwsh -command "New-AzResourceGroup -Name '$ciRg' -Location 'North Europe' -Tag @{subproject='2026956'; Description='Continuous Integration'}"
-                            """
-                        }
+                    stage('Create temporary Resource Group'){
+                        sh """
+                            pwsh -command "New-AzResourceGroup -Name '$ciRg' -Location 'North Europe' -Tag @{subproject='2026956'; Description='Continuous Integration'}"
+                        """
+                    }
+                    try {
                         stage('Create test environment'){
                             sh """
                                 pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-ci -TemplateFile deployment/azuredeploy.json -ResourceGroupName $ciRg -appName $ciAppName -environment $environment -slackChannel 'mock_mock' -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force)"
                             """
                         }
-                        try {
-                            stage('Publish to test environment') {
-                                sh """
-                                    pwsh -command "Publish-AzWebApp -ResourceGroupName $ciRg -Name $ciAppName -ArchivePath $zipName -Force"
-                                """
-                            }
+                        stage('Publish to test environment') {
+                            sh """
+                                pwsh -command "Publish-AzWebApp -ResourceGroupName $ciRg -Name $ciAppName -ArchivePath $zipName -Force"
+                            """
                         }
-                        finally {
-                            stage('Delete test environment'){
-                                sh """
-                                    pwsh -command "Remove-AzResourceGroup -Name '$ciRg' -Force"
-                                """
-                            }
+                    }
+                    finally {
+                        stage('Delete test environment'){
+                            sh """
+                                pwsh -command "Remove-AzResourceGroup -Name '$ciRg' -Force"
+                            """
                         }
                     }
                 }

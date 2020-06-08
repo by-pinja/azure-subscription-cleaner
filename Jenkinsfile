@@ -31,7 +31,7 @@ podTemplate(label: pod.label,
             }
         }
 
-        if (isTest(branch)){
+        if (isTest(branch) || isMaster(branch)) {
             def zipName = 'publish.zip'
 
             container('powershell'){
@@ -41,36 +41,61 @@ podTemplate(label: pod.label,
                     """
                 }
 
-                toAzureTestEnv {
-                    def buildNumber = (env.BUILD_NUMBER)
-                    def ciRg = 'sub-cleaner-ci-' + buildNumber
-                    def ciAppName = 'sub-cleaner-ci-' + buildNumber
+                if (isTest(branch)) {
+                    toAzureTestEnv {
+                        def buildNumber = (env.BUILD_NUMBER)
+                        def ciRg = 'sub-cleaner-ci-' + buildNumber
+                        def ciAppName = 'sub-cleaner-ci-' + buildNumber
 
-                    stage('Create temporary Resource Group'){
-                        sh """
-                            pwsh -command "New-AzResourceGroup -Name '$ciRg' -Location 'North Europe' -Tag @{subproject='2026956'; Description='Continuous Integration'}"
-                        """
-                    }
-                    stage('Create test environment'){
-                        sh """
-                            pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-ci -TemplateFile deployment/azuredeploy.json -ResourceGroupName $ciRg -appName $ciAppName -environment $environment -slackChannel 'mock_mock' -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force)"
-                        """
-                    }
-                    try {
-                        stage('Publish to test environment') {
+                        stage('Create temporary Resource Group'){
                             sh """
-                                pwsh -command "Publish-AzWebApp -ResourceGroupName $ciRg -Name $ciAppName -ArchivePath $zipName -Force"
+                                pwsh -command "New-AzResourceGroup -Name '$ciRg' -Location 'North Europe' -Tag @{subproject='2026956'; Description='Continuous Integration'}"
                             """
                         }
-                    }
-                    finally {
-                        stage('Delete test environment'){
+                        stage('Create test environment'){
                             sh """
-                                pwsh -command "Remove-AzResourceGroup -Name '$ciRg' -Force"
+                                pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-ci -TemplateFile deployment/azuredeploy.json -ResourceGroupName $ciRg -appName $ciAppName -environment $environment -slackChannel 'mock_mock' -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force)"
+                            """
+                        }
+                        try {
+                            stage('Publish to test environment') {
+                                sh """
+                                    pwsh -command "Publish-AzWebApp -ResourceGroupName $ciRg -Name $ciAppName -ArchivePath $zipName -Force"
+                                """
+                            }
+                        }
+                        finally {
+                            stage('Delete test environment'){
+                                sh """
+                                    pwsh -command "Remove-AzResourceGroup -Name '$ciRg' -Force"
+                                """
+                            }
+                        }
+                    }
+                }
+                if (isMaster(branch)) {
+                    // Production deployment is done to test environment because this application is supposed to clean test environment.
+                    toAzureTestEnv {
+                        def productionResourceGroup = 'pinja-sub-cleaner'
+
+                        stage('Create production resource Group'){
+                            sh """
+                                pwsh -command "New-AzResourceGroup -Name '$productionResourceGroup' -Location 'North Europe' -Tag @{subproject='2026956'; Description='Continuous Integration'}"
+                            """
+                        }
+                        stage('Create production environment'){
+                            sh """
+                                pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-cleaner -TemplateFile deployment/azuredeploy.json -ResourceGroupName $productionResourceGroup -appName $productionResourceGroup -environment $environment -slackChannel 'mock_mock' -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force)"
+                            """
+                        }
+                        stage('Publish to production environment') {
+                            sh """
+                                pwsh -command "Publish-AzWebApp -ResourceGroupName $productionResourceGroup -Name $productionResourceGroup -ArchivePath $zipName -Force"
                             """
                         }
                     }
                 }
+
             }
         }
     }

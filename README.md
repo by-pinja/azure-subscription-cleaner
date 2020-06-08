@@ -98,7 +98,7 @@ Create copy from `developer-settings.example.json` as `developer-settings.json`
 with your own values and execute `deployment\Prepare-Environment.ps1`
 
 The function app also needs to be able to delete other resource groups. This can be done by giving
-the function app `Contributor` access to the subscription.
+the function app `Contributor` access to the subscription. This is not done as part of the CI progress.
 
 For details, see `deployment\Prepare-Environment.ps1`
 

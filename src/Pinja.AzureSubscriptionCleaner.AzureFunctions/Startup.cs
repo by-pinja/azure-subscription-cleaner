@@ -37,18 +37,9 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
 
             builder
                 .Services
-                .AddTransient(provider =>
-                {
-                    return BuildConnection();
-                })
-                .AddTransient(prodvider =>
-                {
-                    return config.GetSection("ReportingConfiguration").Get<ReportingConfiguration>();
-                })
-                .AddTransient(prodvider =>
-                {
-                    return config.GetSection("SlackClientSettings").Get<SlackClientSettings>();
-                })
+                .AddTransient(provider => BuildConnection())
+                .AddTransient(prodvider => config.GetSection("CleanupConfiguration").Get<CleanupConfiguration>())
+                .AddTransient(prodvider => config.GetSection("SlackClientSettings").Get<SlackClientSettings>())
                 .AddLogging();
         }
 

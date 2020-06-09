@@ -46,7 +46,7 @@ podTemplate(label: pod.label,
                         def buildNumber = (env.BUILD_NUMBER)
                         def ciRg = 'sub-cleaner-ci-' + buildNumber
                         def ciAppName = 'sub-cleaner-ci-' + buildNumber
-                        def trueVal = '\$true'
+                        def trueVal = '$true'
 
                         stage('Create temporary Resource Group' ){
                             sh """

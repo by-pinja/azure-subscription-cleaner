@@ -87,7 +87,7 @@ podTemplate(label: pod.label,
                         }
                         stage('Create production environment'){
                             sh """
-                                pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-cleaner -TemplateFile deployment/azuredeploy.json -ResourceGroupName $productionResourceGroup -appName $productionResourceGroup -environment $environment -slackChannel '$messageChannel' -simulate \$true -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force)"
+                                pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-cleaner -TemplateFile deployment/azuredeploy.json -ResourceGroupName $productionResourceGroup -appName $productionResourceGroup -environment $environment -slackChannel '$messageChannel' -simulate ([System.Convert]::ToBoolean('true')) -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force)"
                             """
                         }
                         stage('Publish to production environment') {

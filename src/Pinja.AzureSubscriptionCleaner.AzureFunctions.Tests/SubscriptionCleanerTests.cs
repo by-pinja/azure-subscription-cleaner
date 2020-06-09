@@ -27,7 +27,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
         {
             var mockLogger = Substitute.For<ILogger<SubscriptionCleaner>>();
             _mockAzure = Substitute.For<IAzure>();
-            _cleaner = new SubscriptionCleaner(mockLogger, _mockAzure, Substitute.For<ISlackClient>(), Substitute.For<ReportingConfiguration>());
+            _cleaner = new SubscriptionCleaner(mockLogger, _mockAzure, Substitute.For<ISlackClient>(), Substitute.For<CleanupConfiguration>());
         }
 
         [Test]
@@ -88,16 +88,16 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
         [Test]
         public async Task DeleteIfNotLocked_DoesntTryToRemoveLockedGroups()
         {
-            const string expectedGroup = "Group";
+            const string ExpectedGroup = "Group";
 
             var managementLock = Substitute.For<IManagementLock>();
             var paged = new PagedCollection<IManagementLock>
             {
                 managementLock
             };
-            _mockAzure.ManagementLocks.ListByResourceGroupAsync(expectedGroup, true).Returns(paged);
+            _mockAzure.ManagementLocks.ListByResourceGroupAsync(ExpectedGroup, true).Returns(paged);
 
-            await _cleaner.DeleteIfNotLocked(expectedGroup);
+            await _cleaner.DeleteIfNotLocked(ExpectedGroup);
 
             await _mockAzure.ResourceGroups.DidNotReceive().DeleteByNameAsync(Arg.Any<string>());
         }
@@ -105,14 +105,14 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
         [Test]
         public async Task DeleteIfNotLocked_DeletesNonLocked()
         {
-            const string expectedGroup = "Group";
+            const string ExpectedGroup = "Group";
             _mockAzure.ManagementLocks
-                .ListByResourceGroupAsync(expectedGroup, true)
+                .ListByResourceGroupAsync(ExpectedGroup, true)
                 .Returns(new PagedCollection<IManagementLock>());
 
-            await _cleaner.DeleteIfNotLocked(expectedGroup);
+            await _cleaner.DeleteIfNotLocked(ExpectedGroup);
 
-            await _mockAzure.ResourceGroups.Received().DeleteByNameAsync(expectedGroup);
+            await _mockAzure.ResourceGroups.Received().DeleteByNameAsync(ExpectedGroup);
         }
 
         private class MockTimerSchedule : TimerSchedule

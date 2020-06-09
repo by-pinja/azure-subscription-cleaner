@@ -55,7 +55,7 @@ podTemplate(label: pod.label,
                         try {
                             stage('Create test environment') {
                                 sh """
-                                    pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-ci -TemplateFile deployment/azuredeploy.json -ResourceGroupName $ciRg -appName $ciAppName -environment $environment -slackChannel 'mock_mock' -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force)"
+                                    pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-ci -TemplateFile deployment/azuredeploy.json -ResourceGroupName $ciRg -appName $ciAppName -environment $environment -slackChannel 'mock_mock' -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force) -simulate $$true"
                                 """
                             }
                             stage('Publish to test environment') {
@@ -74,6 +74,8 @@ podTemplate(label: pod.label,
                     }
                 }
                 if (isMaster(branch)) {
+                    def messageChannel = 'devops'
+
                     // Production deployment is done to test environment because this application is supposed to clean test environment.
                     toAzureTestEnv {
                         def productionResourceGroup = 'pinja-sub-cleaner'
@@ -85,7 +87,7 @@ podTemplate(label: pod.label,
                         }
                         stage('Create production environment'){
                             sh """
-                                pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-cleaner -TemplateFile deployment/azuredeploy.json -ResourceGroupName $productionResourceGroup -appName $productionResourceGroup -environment $environment -slackChannel 'mock_mock' -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force)"
+                                pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-cleaner -TemplateFile deployment/azuredeploy.json -ResourceGroupName $productionResourceGroup -appName $productionResourceGroup -environment $environment -slackChannel '$messageChannel' -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force) -simulate $$true"
                             """
                         }
                         stage('Publish to production environment') {

@@ -37,6 +37,12 @@
             "metadata": {
                 "description": "Channel for slack messages."
             }
+        },
+        "simulate": {
+            "type": "bool",
+            "metadata": {
+                "description": "If true, only simulation is done."
+            }
         }
     },
     "variables": {
@@ -129,8 +135,12 @@
                             "value": "[parameters('slackBearerToken')]"
                         },
                         {
-                            "name": "ReportingConfiguration:SlackChannel",
+                            "name": "CleanupConfiguration:SlackChannel",
                             "value": "[parameters('slackChannel')]"
+                        },
+                        {
+                            "name": "CleanupConfiguration:Simulate",
+                            "value": "[parameters('simulate')]"
                         }
                     ]
                 }

@@ -21,14 +21,14 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
         private readonly ILogger<SubscriptionCleaner> _logger;
         private readonly IAzure _azureConnection;
         private readonly ISlackClient _slackClient;
-        private readonly ReportingConfiguration _reportingConfiguration;
+        private readonly CleanupConfiguration _cleanupConfiguration;
 
-        public SubscriptionCleaner(ILogger<SubscriptionCleaner> logger, IAzure azureConnection, ISlackClient slackClient, ReportingConfiguration reportingConfiguration)
+        public SubscriptionCleaner(ILogger<SubscriptionCleaner> logger, IAzure azureConnection, ISlackClient slackClient, CleanupConfiguration cleanupConfiguration)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _azureConnection = azureConnection ?? throw new ArgumentNullException(nameof(azureConnection));
             _slackClient = slackClient ?? throw new ArgumentNullException(nameof(slackClient));
-            _reportingConfiguration = reportingConfiguration ?? throw new ArgumentNullException(nameof(reportingConfiguration));
+            _cleanupConfiguration = cleanupConfiguration ?? throw new ArgumentNullException(nameof(cleanupConfiguration));
         }
 
         [FunctionName(nameof(TimerStart))]
@@ -45,7 +45,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
             }
 
             _logger.LogTrace("{class}, Next: {next}, Last: {last}", nameof(TimerStart), timer.ScheduleStatus.Next, timer.ScheduleStatus.Last);
-            string instanceId = await starter.StartNewAsync(nameof(OchestrateSubscriptionCleanUp), Guid.NewGuid().ToString(), timer.ScheduleStatus.Next).ConfigureAwait(true);
+            var instanceId = await starter.StartNewAsync(nameof(OchestrateSubscriptionCleanUp), Guid.NewGuid().ToString(), timer.ScheduleStatus.Next).ConfigureAwait(true);
             _logger.LogInformation($"Started orchestration with ID = '{instanceId}'.");
         }
 
@@ -89,7 +89,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
         {
             if (context is null)
             {
-                throw new System.ArgumentNullException(nameof(context));
+                throw new ArgumentNullException(nameof(context));
             }
 
             _logger.LogTrace("Instance {instanceId}: Finding resource groups to delete...", context.InstanceId);
@@ -103,7 +103,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new System.ArgumentException("resource group name is required!", nameof(name));
+                throw new ArgumentException("resource group name is required!", nameof(name));
             }
 
             _logger.LogDebug("Checking if resource group {resourceGroup} has locks...", name);
@@ -119,7 +119,11 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
                 return false;
             }
             _logger.LogInformation("Deleting resource group {resourceGroup}", name);
-            await _azureConnection.ResourceGroups.DeleteByNameAsync(name).ConfigureAwait(true);
+            if (!_cleanupConfiguration.Simulate)
+            {
+                await _azureConnection.ResourceGroups.DeleteByNameAsync(name).ConfigureAwait(true);
+            }
+
             return true;
         }
 
@@ -135,8 +139,9 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
             {
                 DeletedResourceGroups = slackReportingContext.DeletedResourceGroups,
                 NextTime = slackReportingContext.NextOccurrence,
+                WasSimulated = _cleanupConfiguration.Simulate
             };
-            var message = MessageUtil.CreateDeleteInformationMessage(_reportingConfiguration.SlackChannel, context);
+            var message = MessageUtil.CreateDeleteInformationMessage(_cleanupConfiguration.SlackChannel, context);
             await _slackClient.PostMessage(message).ConfigureAwait(false);
         }
     }

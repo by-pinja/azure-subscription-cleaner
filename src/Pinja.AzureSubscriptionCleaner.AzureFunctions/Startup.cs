@@ -48,7 +48,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
             var msiInformation = new MSILoginInformation(MSIResourceType.AppService);
 
             var credentials = SdkContext.AzureCredentialsFactory.FromMSI(msiInformation, AzureEnvironment.AzureGlobalCloud);
-            return Azure
+            return Microsoft.Azure.Management.Fluent.Azure
                     .Configure()
                     .WithLogLevel(HttpLoggingDelegatingHandler.Level.Basic)
                     .Authenticate(credentials)

@@ -117,6 +117,8 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
 
         private class MockTimerSchedule : TimerSchedule
         {
+            public override bool AdjustForDST => throw new NotImplementedException();
+
             public override DateTime GetNextOccurrence(DateTime now)
             {
                 return DateTime.UtcNow;

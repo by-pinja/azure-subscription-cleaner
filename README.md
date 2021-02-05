@@ -6,7 +6,8 @@
 
 This is still WIP
 
-This software deletes unlocked Azure Resources at specified interval. In our case, it's the first saturday of the month.
+This software periodically deletes unlocked Azure Resources. In our case, it's the first saturday of the month.
+This is specified `SubscriptionCleaner` class.
 
 To opt out from this, lock your resouce group.
 

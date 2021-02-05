@@ -1,11 +1,10 @@
-##############################################################################
-#.SYNOPSIS
-# Generates resources groups for testing purposes
-#
-#.PARAMETER ResourceGroupCount
-# Number of resource groups that are generated
-#
-##############################################################################
+<#
+    .SYNOPSIS
+    Generates resources groups for testing purposes
+
+    .PARAMETER ResourceGroupCount
+    Number of resource groups that are generated
+#>
 param(
     [Parameter(Mandatory = $true)][string]$ResourceGroupCount
 )

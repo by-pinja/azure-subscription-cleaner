@@ -50,13 +50,24 @@ namespace Pinja.AzureSubscriptionCleaner.CommandLine
 
         private static async Task ProcessOptions(ProgramOptions options, ServiceProvider serviceProvider)
         {
+            var logger = serviceProvider.GetService<ILogger<Program>>();
             var resourceGroupWrapper = serviceProvider.GetService<ResourceGroupWrapper>();
+            if (resourceGroupWrapper == null)
+            {
+                logger.LogError("Unable to create {name}. Aborting.", nameof(ResourceGroupWrapper));
+                return;
+            }
 
             var deletedResourceGroups = await resourceGroupWrapper.DeleteNonLockedResourceGroups(options.Simulate).ConfigureAwait(false);
 
             if (!string.IsNullOrWhiteSpace(options.Channel))
             {
                 var slackClient = serviceProvider.GetService<ISlackClient>();
+                if (slackClient == null)
+                {
+                    logger.LogError("Unable to create {name}. Aborting.", nameof(ISlackClient));
+                    return;
+                }
                 var context = new MessageContext
                 {
                     DeletedResourceGroups = deletedResourceGroups,

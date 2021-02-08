@@ -52,7 +52,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
                 "group2"
             };
 
-            mockContext.CallActivityAsync<IEnumerable<string>>(nameof(SubscriptionCleaner.GetResourceGroupNames), string.Empty).Returns(Task.FromResult((IEnumerable<string>)groups));
+            mockContext.CallActivityAsync<IEnumerable<string>>(nameof(SubscriptionCleaner.GetResourceGroupNames), null).Returns(Task.FromResult((IEnumerable<string>)groups));
             mockContext.CallActivityAsync<bool>(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[0]).Returns(Task.FromResult(true));
             mockContext.CallActivityAsync<bool>(nameof(SubscriptionCleaner.DeleteIfNotLocked), groups[1]).Returns(Task.FromResult(true));
 

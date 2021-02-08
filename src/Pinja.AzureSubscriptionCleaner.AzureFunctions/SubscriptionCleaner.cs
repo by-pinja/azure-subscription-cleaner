@@ -61,7 +61,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
             {
                 _logger.LogDebug("Getting resource groups");
             }
-            var resourceGroupNames = await context.CallActivityAsync<IEnumerable<string>>(nameof(GetResourceGroupNames), string.Empty).ConfigureAwait(true);
+            var resourceGroupNames = await context.CallActivityAsync<IEnumerable<string>>(nameof(GetResourceGroupNames), null).ConfigureAwait(true);
 
             var deletedResourceGroupNames = new List<string>();
             foreach (var name in resourceGroupNames)

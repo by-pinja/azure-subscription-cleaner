@@ -82,7 +82,7 @@ podTemplate(label: pod.label,
 
                         stage('Create production resource Group'){
                             sh """
-                                pwsh -command "New-AzResourceGroup -Name '$productionResourceGroup' -Location 'North Europe' -Tag @{subproject='2026956'; Description='Continuous Integration'}"
+                                pwsh -command "New-AzResourceGroup -Name '$productionResourceGroup' -Location 'North Europe' -Tag @{subproject='2026956'; Description='Continuous Integration'} -Force"
                             """
                         }
                         stage('Create production environment'){

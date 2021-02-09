@@ -85,10 +85,14 @@ podTemplate(label: pod.label,
                                 pwsh -command "New-AzResourceGroup -Name '$productionResourceGroup' -Location 'North Europe' -Tag @{subproject='2026956'; Description='Continuous Integration'} -Force"
                             """
                         }
-                        stage('Create production environment'){
-                            sh """
-                                pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-cleaner -TemplateFile deployment/azuredeploy.json -ResourceGroupName $productionResourceGroup -appName $productionResourceGroup -environment $environment -slackChannel '$messageChannel' -simulate ([System.Convert]::ToBoolean('true')) -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force)"
-                            """
+                        withCredentials([
+                            string(credentialsId: 'azure_subscription_cleaner_slack', variable: 'SLACK_TOKEN')
+                        ]){
+                            stage('Create production environment'){
+                                sh """
+                                    pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-cleaner -TemplateFile deployment/azuredeploy.json -ResourceGroupName $productionResourceGroup -appName $productionResourceGroup -environment $environment -slackChannel '$messageChannel' -simulate ([System.Convert]::ToBoolean('true')) -slackBearerToken (ConvertTo-SecureString -String '$SLACK_TOKEN' -AsPlainText -Force)"
+                                """
+                            }
                         }
                         stage('Publish to production environment') {
                             sh """

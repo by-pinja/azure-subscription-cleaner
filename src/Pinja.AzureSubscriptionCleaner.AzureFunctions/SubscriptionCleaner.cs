@@ -12,12 +12,6 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
 {
     public class SubscriptionCleaner
     {
-        /// <summary>
-        /// We want to avoid executing this during workdays so we'll
-        /// execute during weekend
-        /// {second} {minute} {hour} {day} {month} {day of the week}
-        /// </summary>
-        private const string FirstSaturdayOfMonth = "0 0 0 1-7 * SAT";
         private readonly ILogger<SubscriptionCleaner> _logger;
         private readonly IAzure _azureConnection;
         private readonly ISlackClient _slackClient;
@@ -32,7 +26,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
         }
 
         [FunctionName(nameof(TimerStart))]
-        public async Task TimerStart([TimerTrigger(FirstSaturdayOfMonth)] TimerInfo timer, [DurableClient] IDurableOrchestrationClient starter)
+        public async Task TimerStart([TimerTrigger("%CleanupSchedule%")] TimerInfo timer, [DurableClient] IDurableOrchestrationClient starter)
         {
             if (timer is null)
             {

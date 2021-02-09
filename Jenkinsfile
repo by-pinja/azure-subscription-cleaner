@@ -14,6 +14,15 @@ podTemplate(label: pod.label,
     def publishFolder = 'publish'
     def environment = isMaster(branch) ? 'Production' : 'Development'
 
+    /*
+     We want to avoid executing this during workdays so we'll execute during weekend
+     {second} {minute} {hour} {day} {month} {day of the week}
+
+     See https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer?tabs=csharp#ncrontab-expressions
+     for more information
+    */
+    def productionCleanupSchedule = '0 0 0 1-7 * SAT'
+
     node(pod.label) {
         stage('Checkout') {
             checkout scm
@@ -55,7 +64,7 @@ podTemplate(label: pod.label,
                         try {
                             stage('Create test environment') {
                                 sh """
-                                    pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-ci -TemplateFile deployment/azuredeploy.json -ResourceGroupName $ciRg -appName $ciAppName -environment $environment -slackChannel 'mock_mock' -simulate ([System.Convert]::ToBoolean('true')) -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force)"
+                                    pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-ci -TemplateFile deployment/azuredeploy.json -ResourceGroupName $ciRg -appName $ciAppName -environment $environment -slackChannel 'mock_mock' -simulate ([System.Convert]::ToBoolean('true')) -slackBearerToken (ConvertTo-SecureString -String 'mocktoken' -AsPlainText -Force) -cleanupSchedule '$productionCleanupSchedule'"
                                 """
                             }
                             stage('Publish to test environment') {
@@ -90,7 +99,7 @@ podTemplate(label: pod.label,
                         ]){
                             stage('Create production environment'){
                                 sh """
-                                    pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-cleaner -TemplateFile deployment/azuredeploy.json -ResourceGroupName $productionResourceGroup -appName $productionResourceGroup -environment $environment -slackChannel '$messageChannel' -simulate ([System.Convert]::ToBoolean('false')) -slackBearerToken (ConvertTo-SecureString -String '$SLACK_TOKEN' -AsPlainText -Force)"
+                                    pwsh -command "New-AzResourceGroupDeployment -Name azure-subscription-cleaner -TemplateFile deployment/azuredeploy.json -ResourceGroupName $productionResourceGroup -appName $productionResourceGroup -environment $environment -slackChannel '$messageChannel' -simulate ([System.Convert]::ToBoolean('false')) -slackBearerToken (ConvertTo-SecureString -String '$SLACK_TOKEN' -AsPlainText -Force) -cleanupSchedule '$productionCleanupSchedule'"
                                 """
                             }
                         }

@@ -4,12 +4,11 @@
 [![Build Status](https://jenkins.protacon.cloud/buildStatus/icon?job=www.github.com/azure-subscription-cleaner/master)](https://jenkins.protacon.cloud/blue/organizations/jenkins/www.github.com%2Fazure-subscription-cleaner/activity)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=by-pinja/azure-subscription-cleaner&identifier=204444972)](https://dependabot.com)
 
-This is still WIP
-
 This software periodically deletes unlocked Azure Resources. In our case, it's the first saturday of the month.
 This is specified `SubscriptionCleaner` class.
 
-To opt out from this, lock your resouce group.
+To opt out from this, lock your resouce group. for more information, see
+[Opt Out](documentation/OptOut.md)
 
 ## Build
 

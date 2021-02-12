@@ -5,7 +5,8 @@
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=by-pinja/azure-subscription-cleaner&identifier=204444972)](https://dependabot.com)
 
 This software periodically deletes unlocked Azure Resources. In our case, it's the first saturday of the month.
-This is specified `SubscriptionCleaner` class.
+This is specified with app settings. See `deployment/Prepare-Environment.ps1` and `deployment/azuredeploy.json`
+for configuration example.
 
 To opt out from this, lock your resouce group. for more information, see
 [Opt Out](documentation/OptOut.md)

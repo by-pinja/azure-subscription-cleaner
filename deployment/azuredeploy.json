@@ -43,6 +43,12 @@
             "metadata": {
                 "description": "If true, only simulation is done."
             }
+        },
+        "cleanupSchedule": {
+            "type": "string",
+            "metadata": {
+                "description": "Schedule for cleanup (CRON expression). See https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer?tabs=csharp#ncrontab-expressions"
+            }
         }
     },
     "variables": {
@@ -141,6 +147,10 @@
                         {
                             "name": "CleanupConfiguration:Simulate",
                             "value": "[parameters('simulate')]"
+                        },
+                        {
+                            "name": "CleanupSchedule",
+                            "value": "[parameters('cleanupSchedule')]"
                         }
                     ]
                 }

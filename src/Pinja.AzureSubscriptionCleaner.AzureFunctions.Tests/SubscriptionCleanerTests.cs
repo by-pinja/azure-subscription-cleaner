@@ -115,6 +115,21 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
             await _mockAzure.ResourceGroups.Received().DeleteByNameAsync(ExpectedGroup);
         }
 
+        [Test]
+        public async Task DeleteIfNotLocked_DoesntBubbleExpections()
+        {
+            const string ExpectedGroup = "Group";
+            _mockAzure.ManagementLocks
+                .ListByResourceGroupAsync(ExpectedGroup, true)
+                .Returns(new PagedCollection<IManagementLock>());
+
+            _mockAzure.ResourceGroups.DeleteByNameAsync(ExpectedGroup).Returns(x => { throw new Exception(); });
+
+            await _cleaner.DeleteIfNotLocked(ExpectedGroup);
+
+            await _mockAzure.ResourceGroups.Received().DeleteByNameAsync(ExpectedGroup);
+        }
+
         private class MockTimerSchedule : TimerSchedule
         {
             public override bool AdjustForDST => throw new NotImplementedException();

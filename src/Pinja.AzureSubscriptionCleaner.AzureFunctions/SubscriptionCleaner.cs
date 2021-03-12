@@ -115,7 +115,14 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
             _logger.LogInformation("Deleting resource group {resourceGroup}", name);
             if (!_cleanupConfiguration.Simulate)
             {
-                await _azureConnection.ResourceGroups.DeleteByNameAsync(name).ConfigureAwait(true);
+                try
+                {
+                    await _azureConnection.ResourceGroups.DeleteByNameAsync(name).ConfigureAwait(true);
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError(exception, "Something went wrong while deleting resource group {resourceGroup}", name);
+                }
             }
 
             return true;

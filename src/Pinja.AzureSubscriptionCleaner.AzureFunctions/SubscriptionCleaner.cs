@@ -121,9 +121,16 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
                 }
                 catch (Exception exception)
                 {
-                    // NOTE: Pokemon pattern is used because we don't have control on the exceptions thrown by 3rd party
-                    // library and we don't want to stop execution fails. This can happen if lock is added while names are fetched
-                    // or resource group was deleted by some other means or if there are some other transient issues.
+                    /*
+                    NOTE: Pokemon pattern is used because we don't have control on the exceptions thrown by 3rd party
+                    library and we don't want to stop if execution fails.
+
+                    This can hapend for multiple reasons
+                    1. Resources are locked before we delete
+                    1. Resources are already deleted before we try to delete
+                    1. Some other transient error. Resource group deletion has been
+                       known to randomly fail.
+                    */
                     _logger.LogError(exception, "Something went wrong while deleting resource group {resourceGroup}", name);
                 }
             }

@@ -99,7 +99,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
 
             await _cleaner.DeleteIfNotLocked(ExpectedGroup);
 
-            await _mockAzure.ResourceGroups.DidNotReceive().DeleteByNameAsync(Arg.Any<string>());
+            await _mockAzure.ResourceGroups.DidNotReceive().BeginDeleteByNameAsync(Arg.Any<string>());
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
 
             await _cleaner.DeleteIfNotLocked(ExpectedGroup);
 
-            await _mockAzure.ResourceGroups.Received().DeleteByNameAsync(ExpectedGroup);
+            await _mockAzure.ResourceGroups.Received().BeginDeleteByNameAsync(ExpectedGroup);
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
 
             await _cleaner.DeleteIfNotLocked(ExpectedGroup);
 
-            await _mockAzure.ResourceGroups.Received().DeleteByNameAsync(ExpectedGroup);
+            await _mockAzure.ResourceGroups.Received().BeginDeleteByNameAsync(ExpectedGroup);
         }
 
         private class MockTimerSchedule : TimerSchedule
@@ -146,7 +146,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
 
             public Task<IPagedCollection<T>> GetNextPageAsync(CancellationToken cancellationToken = default)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
     }

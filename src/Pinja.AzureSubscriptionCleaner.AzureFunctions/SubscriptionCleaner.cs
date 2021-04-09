@@ -117,7 +117,12 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
             {
                 try
                 {
-                    await _azureConnection.ResourceGroups.DeleteByNameAsync(name).ConfigureAwait(true);
+                    /*
+                        BeginDeleteByNameAsync is used instead of DeleteByNameAsync because we don't want to wait for operation completion.
+                        This may hide errors if deleting fails, but deleting may take longer than 5 minutes (activity function timeout)
+                        so we do this to avoid timeout.
+                    */
+                    await _azureConnection.ResourceGroups.BeginDeleteByNameAsync(name).ConfigureAwait(true);
                 }
                 catch (Exception exception)
                 {

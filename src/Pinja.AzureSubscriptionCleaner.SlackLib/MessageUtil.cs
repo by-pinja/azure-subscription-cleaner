@@ -18,7 +18,7 @@ namespace Pinja.AzureSubscriptionCleaner.SlackLib
 
             if (messageContext.DeletedResourceGroups.Any())
             {
-                messageContent.AppendLine("Following resource groups where deleted in cleanup: ");
+                messageContent.AppendLine("Following resource groups were deleted in cleanup: ");
                 foreach (var deletedResourceGroup in messageContext.DeletedResourceGroups)
                 {
                     messageContent.AppendLine(deletedResourceGroup);

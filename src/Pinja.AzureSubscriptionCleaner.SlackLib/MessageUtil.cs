@@ -29,11 +29,6 @@ namespace Pinja.AzureSubscriptionCleaner.SlackLib
                 messageContent.AppendLine("No resource groups were deleted.");
             }
 
-            if (messageContext.NextTime.HasValue)
-            {
-                messageContent.AppendLine($"Next cleanup (UTC): {messageContext.NextTime}");
-            }
-
             var message = new PostMessage
             {
                 Channel = channel,
@@ -55,7 +50,6 @@ namespace Pinja.AzureSubscriptionCleaner.SlackLib
         public class MessageContext
         {
             public IReadOnlyList<string> DeletedResourceGroups { get; set; }
-            public DateTimeOffset? NextTime { get; set; }
             public bool WasSimulated { get; set; }
         }
     }

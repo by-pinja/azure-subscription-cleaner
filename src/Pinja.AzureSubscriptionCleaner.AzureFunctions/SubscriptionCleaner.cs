@@ -38,8 +38,8 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
                 throw new ArgumentNullException(nameof(starter));
             }
 
-            _logger.LogTrace("{class}, Next: {next}, Last: {last}", nameof(TimerStart), timer.ScheduleStatus.Next, timer.ScheduleStatus.Last);
-            var instanceId = await starter.StartNewAsync(nameof(OchestrateSubscriptionCleanUp), Guid.NewGuid().ToString(), timer.ScheduleStatus.Next).ConfigureAwait(true);
+            _logger.LogTrace("{class}, Last execution: {last}", nameof(TimerStart), timer.ScheduleStatus.Last);
+            var instanceId = await starter.StartNewAsync(nameof(OchestrateSubscriptionCleanUp), Guid.NewGuid().ToString()).ConfigureAwait(true);
             _logger.LogInformation($"Started orchestration with ID = '{instanceId}'.");
         }
 
@@ -72,7 +72,6 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
 
             var slackContext = new SlackReportingContext
             {
-                NextOccurrence = context.GetInput<DateTime>(),
                 DeletedResourceGroups = deletedResourceGroupNames
             };
             await context.CallActivityAsync(nameof(ReportToSlack), slackContext).ConfigureAwait(true);
@@ -154,7 +153,6 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
             var context = new MessageUtil.MessageContext
             {
                 DeletedResourceGroups = slackReportingContext.DeletedResourceGroups,
-                NextTime = slackReportingContext.NextOccurrence,
                 WasSimulated = _cleanupConfiguration.Simulate
             };
             var message = MessageUtil.CreateDeleteInformationMessage(_cleanupConfiguration.SlackChannel, context);

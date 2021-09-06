@@ -6,7 +6,6 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
 {
     public class SlackReportingContext
     {
-        public DateTimeOffset NextOccurrence { get; set; }
         public List<string> DeletedResourceGroups { get; set; }
     }
 }

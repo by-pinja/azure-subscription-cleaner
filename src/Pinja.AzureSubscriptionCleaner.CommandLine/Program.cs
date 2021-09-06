@@ -71,7 +71,6 @@ namespace Pinja.AzureSubscriptionCleaner.CommandLine
                 var context = new MessageContext
                 {
                     DeletedResourceGroups = deletedResourceGroups,
-                    NextTime = null,
                     WasSimulated = options.Simulate
                 };
 

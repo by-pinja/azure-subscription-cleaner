@@ -37,7 +37,7 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions.Tests
             var starter = Substitute.For<IDurableOrchestrationClient>();
             await _cleaner.TimerStart(timer, starter);
 
-            await starter.Received().StartNewAsync(nameof(SubscriptionCleaner.OchestrateSubscriptionCleanUp), Arg.Any<string>(), Arg.Any<DateTime>());
+            await starter.Received().StartNewAsync(nameof(SubscriptionCleaner.OchestrateSubscriptionCleanUp), Arg.Any<string>());
         }
 
         [Test]

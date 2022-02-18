@@ -8,11 +8,19 @@
             "Host.Aggregator": "Information",
             "Pinja": "Trace"
         },
-        "applicationInsights": {}
+        "applicationInsights": {
+            "httpAutoCollectionOptions": {
+                "enableW3CDistributedTracing": true
+            }
+        }
     },
     "extensions": {
         "durableTask": {
-            "hubName": "DurableFunctionsHub"
+            "hubName": "DurableFunctionsHub",
+            "tracing": {
+                "distributedTracingEnabled": true,
+                "distributedTracingProtocol": "W3CTraceContext"
+            }
         }
     }
 }

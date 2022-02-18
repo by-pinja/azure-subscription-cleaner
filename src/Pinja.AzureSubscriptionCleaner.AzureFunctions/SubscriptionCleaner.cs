@@ -46,24 +46,19 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
         [FunctionName(nameof(OchestrateSubscriptionCleanUp))]
         public async Task OchestrateSubscriptionCleanUp([OrchestrationTrigger] IDurableOrchestrationContext context)
         {
+            var logger = context.CreateReplaySafeLogger(_logger);
             if (context is null)
             {
                 throw new ArgumentNullException(nameof(context));
             }
 
-            if (!context.IsReplaying)
-            {
-                _logger.LogDebug("Getting resource groups");
-            }
+            logger.LogDebug("Getting resource groups");
             var resourceGroupNames = await context.CallActivityAsync<IEnumerable<string>>(nameof(GetResourceGroupNames), null).ConfigureAwait(true);
 
             var deletedResourceGroupNames = new List<string>();
             foreach (var name in resourceGroupNames)
             {
-                if (!context.IsReplaying)
-                {
-                    _logger.LogDebug("Calling delete function on {resourceGroupName}", name);
-                }
+                logger.LogDebug("Calling delete function on {resourceGroupName}", name);
                 if (await context.CallActivityAsync<bool>(nameof(DeleteIfNotLocked), name).ConfigureAwait(true))
                 {
                     deletedResourceGroupNames.Add(name);
@@ -84,7 +79,6 @@ namespace Pinja.AzureSubscriptionCleaner.AzureFunctions
             {
                 throw new ArgumentNullException(nameof(context));
             }
-
             _logger.LogTrace("Instance {instanceId}: Finding resource groups to delete...", context.InstanceId);
             var resourceGroups = await _azureConnection.ResourceGroups.ListAsync(true).ConfigureAwait(true);
             _logger.LogDebug("Instance {instanceId}: Found {count} resource groups to delete.", context.InstanceId, resourceGroups.Count());

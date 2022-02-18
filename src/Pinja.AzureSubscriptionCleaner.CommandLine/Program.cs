@@ -20,9 +20,9 @@ namespace Pinja.AzureSubscriptionCleaner.CommandLine
         public static void Main(string[] args)
         {
             using var dependencyInjection = BuildDependencyInjection();
-            var logger = dependencyInjection.GetService<ILogger<Program>>();
+            var logger = dependencyInjection.GetRequiredService<ILogger<Program>>();
             var start = DateTime.UtcNow;
-            logger.LogDebug("Starting time: {time}", start);
+            logger.LogDebug("Starting time: {Time}", start);
 
             Parser
                 .Default
@@ -41,20 +41,20 @@ namespace Pinja.AzureSubscriptionCleaner.CommandLine
                             return Task.CompletedTask;
                         }
 
-                        logger.LogWarning("Something went wrong while parsing command(s): Errors: {errors}", string.Join(", ", errors));
+                        logger.LogWarning("Something went wrong while parsing command(s): Errors: {Errors}", string.Join(", ", errors));
                         return Task.CompletedTask;
                     }).Wait();
 
-            logger.LogDebug("Run duration: {duration}", DateTime.UtcNow - start);
+            logger.LogDebug("Run duration: {Duration}", DateTime.UtcNow - start);
         }
 
         private static async Task ProcessOptions(ProgramOptions options, ServiceProvider serviceProvider)
         {
-            var logger = serviceProvider.GetService<ILogger<Program>>();
+            var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
             var resourceGroupWrapper = serviceProvider.GetService<ResourceGroupWrapper>();
             if (resourceGroupWrapper == null)
             {
-                logger.LogError("Unable to create {name}. Aborting.", nameof(ResourceGroupWrapper));
+                logger.LogError("Unable to create {Name}. Aborting.", nameof(ResourceGroupWrapper));
                 return;
             }
 
@@ -62,10 +62,10 @@ namespace Pinja.AzureSubscriptionCleaner.CommandLine
 
             if (!string.IsNullOrWhiteSpace(options.Channel))
             {
-                var slackClient = serviceProvider.GetService<ISlackClient>();
+                var slackClient = serviceProvider.GetRequiredService<ISlackClient>();
                 if (slackClient == null)
                 {
-                    logger.LogError("Unable to create {name}. Aborting.", nameof(ISlackClient));
+                    logger.LogError("Unable to create {Name}. Aborting.", nameof(ISlackClient));
                     return;
                 }
                 var context = new MessageContext

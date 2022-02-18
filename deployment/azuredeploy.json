@@ -75,13 +75,15 @@
         },
         {
             "type": "Microsoft.Web/serverfarms",
-            "apiVersion": "2015-04-01",
+            "apiVersion": "2020-12-01",
             "name": "[variables('hostingPlanName')]",
             "location": "[parameters('location')]",
+            "sku": {
+                "name": "Y1",
+                "capacity": 1
+            },
             "properties": {
-                "name": "[variables('hostingPlanName')]",
-                "computeMode": "Dynamic",
-                "sku": "Dynamic"
+                "name": "[variables('hostingPlanName')]"
             },
             "tags": {
                 "displayName": "Server for function app",
@@ -126,11 +128,11 @@
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
-                            "value": "~3"
+                            "value": "~4"
                         },
                         {
-                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
-                            "value": "6.5.0"
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
                         },
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",

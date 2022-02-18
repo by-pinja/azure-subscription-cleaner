@@ -25,7 +25,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $publishFolder = 'publish'
-$azureFunctionProject = 'src\Pinja.AzureSubscriptionCleaner.AzureFunctions';
+$azureFunctionProject = 'src/Pinja.AzureSubscriptionCleaner.AzureFunctions';
 
 # delete any previous publish
 if (Test-path $publishFolder) { Remove-Item -Recurse -Force $publishFolder }
@@ -34,8 +34,8 @@ dotnet publish -c Release -o $publishFolder $azureFunctionProject --version-suff
 
 $destination = "publish.zip"
 $fullSourcePath = (Resolve-Path "$publishFolder").Path
-$fullTargetPath = (Resolve-Path ".\").Path
-$fullZipTarget = "$fullTargetPath\$destination"
+$fullTargetPath = (Resolve-Path "./").Path
+$fullZipTarget = "$fullTargetPath/$destination"
 
 Compress-Archive -DestinationPath $fullZipTarget -Path "$fullSourcePath/*" -Force
 
